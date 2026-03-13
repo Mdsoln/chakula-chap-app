@@ -49,7 +49,7 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
           if (categoryId != null) 'category_id': categoryId,
           if (search != null && search.isNotEmpty) 'search': search,
           'page': page,
-          'per_page': pageSize,
+          'size': pageSize,
         },
       );
       final list = res.data['data'] as List<dynamic>;
@@ -76,7 +76,7 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
     try {
       final res = await _client.dio.get(
         ApiEndpoints.menuItems,
-        queryParameters: {'featured': true, 'per_page': 6},
+        queryParameters: {'featured': true, 'size': 6},
       );
       final list = res.data['data'] as List<dynamic>;
       return list

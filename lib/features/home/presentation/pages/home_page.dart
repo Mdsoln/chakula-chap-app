@@ -109,7 +109,7 @@ class _HomeViewState extends State<_HomeView> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Center(
-                  child: Text('Z',
+                  child: Text('C',
                       style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 20,
@@ -129,7 +129,7 @@ class _HomeViewState extends State<_HomeView> {
                       Text('Delivering to', style: AppTextStyles.caption.copyWith(color: AppColors.textMuted)),
                     ]),
                     const Row(children: [
-                      Text('Kariakoo, Dar es Salaam', style: AppTextStyles.labelLarge),
+                      Text('Kagera,Magomeni', style: AppTextStyles.labelLarge),
                       Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.goldBright, size: 18),
                     ]),
                   ],

@@ -1,16 +1,27 @@
+
+import 'package:chakula_chap/features/order_tracking/data/datasources/mock_order_datasource.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Mock datasources
 import '../../features/auth/data/datasources/auth_mock_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
+import '../../features/menu/data/datasources/menu_mock_datasource.dart';
+import '../../features/menu/data/datasources/menu_remote_datasource.dart';
+import '../../features/order_tracking/data/datasources/order_remote_datasource.dart';
+import '../../features/order_tracking/data/datasources/order_tracking_datasource.dart';
+
 import 'injection.config.dart';
 
 final getIt = GetIt.instance;
 
-const bool useMock = true;
+/// ── THE ONE SWITCH ────────────────────────────────────────────────────────────
+const bool kUseMock = true;
+/// ─────────────────────────────────────────────────────────────────────────────
 
 @InjectableInit(
   initializerName: 'init',
@@ -20,19 +31,41 @@ const bool useMock = true;
 Future<void> configureDependencies() async {
   await getIt.init();
 
-  // ── Mock override ─────────────────────────────────────────────────────────
-  // When [useMock] is true, replace the real AuthRemoteDataSource with the
-  // mock. Everything above the data layer (repository, BLoC) is untouched.
-  if (useMock) {
-    getIt.unregister<AuthRemoteDataSource>();
-    getIt.registerFactory<AuthRemoteDataSource>(
-          () => MockAuthRemoteDataSource(),
-    );
+  if (kUseMock) {
+    _registerMocks();
   }
-
 }
 
-/// External (third-party) dependencies registered manually
+/// Replaces real datasources with mock singletons.
+/// The repository and BLoC layers are untouched — they receive the same
+/// abstract interface, so they don't know or care it's a mock.
+void _registerMocks() {
+  // ── Auth ────────────────────────────────────────────────────────────────────
+  getIt.unregister<AuthRemoteDataSource>();
+  getIt.registerLazySingleton<AuthRemoteDataSource>(
+        () => MockAuthRemoteDataSource.instance,
+  );
+
+  // ── Menu ────────────────────────────────────────────────────────────────────
+  getIt.unregister<MenuRemoteDataSource>();
+  getIt.registerLazySingleton<MenuRemoteDataSource>(
+        () => MockMenuRemoteDataSource.instance,
+  );
+
+  // ── Orders (remote) ─────────────────────────────────────────────────────────
+  getIt.unregister<OrderRemoteDataSource>();
+  getIt.registerLazySingleton<OrderRemoteDataSource>(
+        () => MockOrderRemoteDataSource.instance,
+  );
+
+  // ── Order Tracking (WebSocket → timer-based stream) ─────────────────────────
+  getIt.unregister<OrderTrackingDataSource>();
+  getIt.registerLazySingleton<OrderTrackingDataSource>(
+        () => MockOrderTrackingDataSource.instance,
+  );
+}
+
+/// External (third-party) dependencies registered manually.
 @module
 class ExternalModule {
   @singleton
@@ -57,6 +90,3 @@ class ExternalModule {
   @singleton
   Future<Box<dynamic>> get menuCacheBox => Hive.openBox('menu_cache_box');
 }
-
-// NOTE: Run `dart run build_runner build --delete-conflicting-outputs`
-// to generate injection.config.dart after adding @injectable/@singleton annotations
