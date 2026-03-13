@@ -18,7 +18,7 @@ Future<void> configureDependencies() async => getIt.init();
 
 /// External (third-party) dependencies registered manually
 @module
-abstract class ExternalModule {
+class ExternalModule {
   @singleton
   FlutterSecureStorage get secureStorage => const FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
