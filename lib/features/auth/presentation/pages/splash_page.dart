@@ -109,7 +109,7 @@ class _SplashPageState extends State<SplashPage>
                     'ChakulaChap',
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 52,
+                      fontSize: 44,
                       fontWeight: FontWeight.w800,
                       color: AppColors.goldBright,
                       letterSpacing: 8,

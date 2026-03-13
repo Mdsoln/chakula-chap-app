@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +8,7 @@ import 'package:injectable/injectable.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/menu/domain/entities/menu_item_entity.dart';
 import '../../features/menu/presentation/pages/menu_item_detail_page.dart';
 import '../../features/order_tracking/presentation/pages/order_confirm_page.dart';
 import '../../features/order_tracking/presentation/pages/order_tracking_page.dart';
@@ -14,6 +17,132 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/otp_page.dart';
+
+class _AppExtraCodec extends Codec<Object?, Object?> {
+  const _AppExtraCodec();
+
+  @override
+  Converter<Object?, Object?> get encoder => const _AppExtraEncoder();
+
+  @override
+  Converter<Object?, Object?> get decoder => const _AppExtraDecoder();
+}
+
+class _AppExtraEncoder extends Converter<Object?, Object?> {
+  const _AppExtraEncoder();
+
+  @override
+  Object? convert(Object? input) {
+    if (input == null) return null;
+
+    // ── MenuItemEntity ────────────────────────────────────────────────────────
+    if (input is MenuItemEntity) {
+      return <String, Object?>{
+        '__type': 'MenuItemEntity',
+        'id': input.id,
+        'name': input.name,
+        'description': input.description,
+        'price': input.price,
+        'categoryId': input.categoryId,
+        'emoji': input.emoji,
+        'imageUrl': input.imageUrl,
+        'rating': input.rating,
+        'reviewCount': input.reviewCount,
+        'prepTimeMinutes': input.prepTimeMinutes,
+        'calories': input.calories,
+        'isAvailable': input.isAvailable,
+        'isFeatured': input.isFeatured,
+        'tag': input.tag,
+        'variants': input.variants
+            .map((v) => {
+          'id': v.id,
+          'label': v.label,
+          'priceModifier': v.priceModifier,
+        })
+            .toList(),
+        'extras': input.extras
+            .map((e) => {
+          'id': e.id,
+          'name': e.name,
+          'price': e.price,
+        })
+            .toList(),
+      };
+    }
+
+    // ── String (used by OtpPage phone, OrderConfirmPage orderId) ─────────────
+    if (input is String) {
+      return <String, Object?>{'__type': 'String', 'value': input};
+    }
+
+    throw ArgumentError(
+      '[AppRouter] Unsupported extra type: ${input.runtimeType}. '
+          'Add a branch in _AppExtraEncoder and _AppExtraDecoder.',
+    );
+  }
+}
+
+class _AppExtraDecoder extends Converter<Object?, Object?> {
+  const _AppExtraDecoder();
+
+  @override
+  Object? convert(Object? input) {
+    if (input == null) return null;
+    if (input is! Map<String, Object?>) return input;
+
+    final type = input['__type'] as String?;
+
+    switch (type) {
+    // ── MenuItemEntity ────────────────────────────────────────────────────
+      case 'MenuItemEntity':
+        final variantsList = (input['variants'] as List<dynamic>? ?? [])
+            .cast<Map<String, dynamic>>()
+            .map((v) => MenuItemVariantEntity(
+          id: v['id'] as String,
+          label: v['label'] as String,
+          priceModifier: (v['priceModifier'] as num).toDouble(),
+        ))
+            .toList();
+
+        final extrasList = (input['extras'] as List<dynamic>? ?? [])
+            .cast<Map<String, dynamic>>()
+            .map((e) => MenuItemExtraEntity(
+          id: e['id'] as String,
+          name: e['name'] as String,
+          price: (e['price'] as num).toDouble(),
+        ))
+            .toList();
+
+        return MenuItemEntity(
+          id: input['id'] as String,
+          name: input['name'] as String,
+          description: input['description'] as String,
+          price: (input['price'] as num).toDouble(),
+          categoryId: input['categoryId'] as String,
+          emoji: input['emoji'] as String,
+          imageUrl: input['imageUrl'] as String?,
+          rating: (input['rating'] as num).toDouble(),
+          reviewCount: input['reviewCount'] as int,
+          prepTimeMinutes: input['prepTimeMinutes'] as int,
+          calories: input['calories'] as int,
+          isAvailable: input['isAvailable'] as bool,
+          isFeatured: input['isFeatured'] as bool,
+          tag: input['tag'] as String?,
+          variants: variantsList,
+          extras: extrasList,
+        );
+
+    // ── String ─────────────────────────────────────────────────────────────
+      case 'String':
+        return input['value'] as String;
+
+      default:
+        return input;
+    }
+  }
+}
+
+// ── Router ────────────────────────────────────────────────────────────────────
 
 @singleton
 class AppRouter {
@@ -24,6 +153,7 @@ class AppRouter {
   late final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
     debugLogDiagnostics: true,
+    extraCodec: const _AppExtraCodec(),
     redirect: _authGuard,
     routes: [
       // ── Auth Flow ────────────────────────────────────────
@@ -74,7 +204,10 @@ class AppRouter {
         name: 'menu-item-detail',
         pageBuilder: (ctx, state) => _buildSlideTransition(
           state,
-          MenuItemDetailPage(itemId: state.pathParameters['id']!),
+          MenuItemDetailPage(
+            itemId: state.pathParameters['id']!,
+            item: state.extra as MenuItemEntity?,
+          ),
         ),
       ),
       GoRoute(
@@ -131,7 +264,7 @@ class AppRouter {
     if (isAuthenticated && state.matchedLocation == AppRoutes.login) {
       return AppRoutes.home;
     }
-    return null; // No redirect
+    return null;
   }
 
   // ── Page transitions ──────────────────────────────────────

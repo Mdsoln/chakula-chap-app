@@ -142,7 +142,7 @@ class DeliveryAddressEntity extends Equatable {
 
 class OrderEntity extends Equatable {
   final String id;
-  final String orderNumber; // e.g. ZTU-20240001
+  final String orderNumber; // e.g. CCHAP-20240001
   final List<CartItemEntity> items;
   final DeliveryAddressEntity deliveryAddress;
   final PaymentMethod paymentMethod;
