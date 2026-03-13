@@ -141,7 +141,7 @@ class _LoginViewState extends State<_LoginView>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Zetu logo mark
+        // ChakulaChap logo mark
         Container(
           width: 52,
           height: 52,
@@ -150,7 +150,7 @@ class _LoginViewState extends State<_LoginView>
             borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
           ),
           child: const Center(
-            child: Text('Z', style: TextStyle(fontFamily: 'Poppins', fontSize: 28, fontWeight: FontWeight.w800, color: AppColors.navyDeep)),
+            child: Text('C', style: TextStyle(fontFamily: 'Poppins', fontSize: 28, fontWeight: FontWeight.w800, color: AppColors.navyDeep)),
           ),
         ),
         const SizedBox(height: AppDimensions.spaceLg),
