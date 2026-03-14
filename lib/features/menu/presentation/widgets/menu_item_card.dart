@@ -61,6 +61,7 @@ class _MenuItemCardState extends State<MenuItemCard>
           clipBehavior: Clip.hardEdge,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               _buildImage(),
               _buildDetails(),
@@ -75,11 +76,14 @@ class _MenuItemCardState extends State<MenuItemCard>
     return Stack(
       children: [
         Container(
-          height: 120,
+          height: 110,
           color: AppColors.navyMedium,
           width: double.infinity,
           child: Center(
-            child: Text(widget.item.emoji, style: const TextStyle(fontSize: 56)),
+            child: Text(
+              widget.item.emoji,
+              style: const TextStyle(fontSize: 52),
+            ),
           ),
         ),
         if (widget.item.tag != null)
@@ -90,7 +94,8 @@ class _MenuItemCardState extends State<MenuItemCard>
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
                 color: AppColors.goldBright,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
+                borderRadius:
+                BorderRadius.circular(AppDimensions.radiusFull),
               ),
               child: Text(
                 widget.item.tag!,
@@ -107,8 +112,11 @@ class _MenuItemCardState extends State<MenuItemCard>
             child: Container(
               color: Colors.black.withOpacity(0.6),
               child: Center(
-                child: Text('Unavailable',
-                    style: AppTextStyles.labelMedium.copyWith(color: AppColors.textMuted)),
+                child: Text(
+                  'Unavailable',
+                  style: AppTextStyles.labelMedium
+                      .copyWith(color: AppColors.textMuted),
+                ),
               ),
             ),
           ),
@@ -118,29 +126,34 @@ class _MenuItemCardState extends State<MenuItemCard>
 
   Widget _buildDetails() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             widget.item.name,
-            style: AppTextStyles.labelLarge.copyWith(height: 1.3),
+            style: AppTextStyles.labelLarge.copyWith(height: 1.2),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 3),
           Row(
             children: [
-              const Icon(Icons.star_rounded, size: 12, color: AppColors.goldBright),
+              const Icon(Icons.star_rounded,
+                  size: 12, color: AppColors.goldBright),
               const SizedBox(width: 3),
-              Text(widget.item.rating.toString(), style: AppTextStyles.bodySmall),
+              Text(widget.item.rating.toString(),
+                  style: AppTextStyles.bodySmall),
               const SizedBox(width: 6),
-              const Icon(Icons.access_time_rounded, size: 11, color: AppColors.textMuted),
+              const Icon(Icons.access_time_rounded,
+                  size: 11, color: AppColors.textMuted),
               const SizedBox(width: 3),
-              Text('${widget.item.prepTimeMinutes}m', style: AppTextStyles.bodySmall),
+              Text('${widget.item.prepTimeMinutes}m',
+                  style: AppTextStyles.bodySmall),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -154,17 +167,29 @@ class _MenuItemCardState extends State<MenuItemCard>
                   width: 30,
                   height: 30,
                   decoration: BoxDecoration(
-                    gradient: widget.item.isAvailable ? AppColors.goldGradient : null,
-                    color: widget.item.isAvailable ? null : AppColors.navyAccent,
+                    gradient: widget.item.isAvailable
+                        ? AppColors.goldGradient
+                        : null,
+                    color: widget.item.isAvailable
+                        ? null
+                        : AppColors.navyAccent,
                     borderRadius: BorderRadius.circular(9),
                     boxShadow: widget.item.isAvailable
-                        ? [BoxShadow(color: AppColors.goldBright.withOpacity(0.4), blurRadius: 8, offset: const Offset(0, 3))]
+                        ? [
+                      BoxShadow(
+                        color: AppColors.goldBright.withOpacity(0.4),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      )
+                    ]
                         : null,
                   ),
                   child: Icon(
                     Icons.add_rounded,
                     size: 18,
-                    color: widget.item.isAvailable ? AppColors.navyDeep : AppColors.textDisabled,
+                    color: widget.item.isAvailable
+                        ? AppColors.navyDeep
+                        : AppColors.textDisabled,
                   ),
                 ),
               ),
