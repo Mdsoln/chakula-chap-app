@@ -10,6 +10,7 @@ import 'core/di/injection.dart';
 import 'core/observer/app_bloc_observer.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/cart/presentation/bloc/cart_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,31 +65,34 @@ class ChakulaChapApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'ChakulaChap',
-      debugShowCheckedModeBanner: false,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => getIt<CartBloc>()..add(LoadCartEvent()),
+        ),
+      ],
+      child: MaterialApp.router(
+        title: 'ChakulaChap',
+        debugShowCheckedModeBanner: false,
 
-      // Theme
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark,       // ChakulaChap uses dark theme exclusively
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.dark,
 
-      // Navigation — GoRouter handles deep links, auth guard, transitions
-      routerConfig: getIt<AppRouter>().router,
+        routerConfig: getIt<AppRouter>().router,
 
-      // Accessibility
-      builder: (context, child) {
-        return MediaQuery(
-          // Prevent system font-scaling from breaking layouts
-          data: MediaQuery.of(context).copyWith(
-            textScaler: MediaQuery.of(context).textScaler.clamp(
-              minScaleFactor: 0.85,
-              maxScaleFactor: 1.15,
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: MediaQuery.of(context).textScaler.clamp(
+                minScaleFactor: 0.85,
+                maxScaleFactor: 1.15,
+              ),
             ),
-          ),
-          child: child!,
-        );
-      },
+            child: child!,
+          );
+        },
+      ),
     );
   }
 }

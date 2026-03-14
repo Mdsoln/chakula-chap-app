@@ -25,7 +25,6 @@ class HomePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<MenuBloc>()..add(const LoadMenuEvent())),
-        BlocProvider(create: (_) => getIt<CartBloc>()..add(LoadCartEvent())),
       ],
       child: const _HomeView(),
     );

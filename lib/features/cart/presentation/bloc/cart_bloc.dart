@@ -96,7 +96,7 @@ class CartErrorState extends CartState {
 
 // ── BLoC ──────────────────────────────────────────────────────────────────────
 
-@injectable
+@singleton
 class CartBloc extends Bloc<CartEvent, CartState> {
   final GetCartUseCase _getCart;
   final AddToCartUseCase _addToCart;

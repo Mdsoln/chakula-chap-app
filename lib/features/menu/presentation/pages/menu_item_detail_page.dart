@@ -15,18 +15,12 @@ import '../../../menu/domain/entities/menu_item_entity.dart';
 
 class MenuItemDetailPage extends StatelessWidget {
   final String itemId;
-  // Item can be passed directly (from home) or fetched by id
   final MenuItemEntity? item;
 
   const MenuItemDetailPage({super.key, required this.itemId, this.item});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<CartBloc>()..add(LoadCartEvent()),
-      child: _MenuItemDetailView(item: item),
-    );
-  }
+  Widget build(BuildContext context) => _MenuItemDetailView(item: item);
 }
 
 class _MenuItemDetailView extends StatefulWidget {
@@ -366,50 +360,119 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
       bottom: 0,
       left: 0,
       right: 0,
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceCard,
-          border: const Border(top: BorderSide(color: AppColors.navyAccent, width: 0.5)),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, -4))],
-        ),
-        child: Row(
-          children: [
-            // Qty control
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(
-                color: AppColors.navyMedium,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                border: Border.all(color: AppColors.navyAccent, width: 0.5),
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () => setState(() => _qty = (_qty - 1).clamp(1, 99)),
-                    icon: const Icon(Icons.remove_rounded, size: 18, color: AppColors.textSecondary),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-                  ),
-                  Text('$_qty', style: AppTextStyles.h3),
-                  IconButton(
-                    onPressed: () => setState(() => _qty++),
-                    icon: const Icon(Icons.add_rounded, size: 18, color: AppColors.goldBright),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+      child: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          final cart = switch (state) {
+            CartLoadedState s => s.cart,
+            CartItemAddedState s => s.cart,
+            _ => null,
+          };
+          final hasItems = cart != null && !cart.isEmpty;
+
+          return Container(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceCard,
+              border: const Border(top: BorderSide(color: AppColors.navyAccent, width: 0.5)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 20,
+                  offset: const Offset(0, -4),
+                )
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (hasItems) ...[
+                  GestureDetector(
+                    onTap: () => context.push(AppRoutes.cart),
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      decoration: BoxDecoration(
+                        gradient: AppColors.goldGradient,
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.goldBright.withOpacity(0.35),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          )
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: AppColors.navyDeep.withOpacity(0.25),
+                              borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
+                            ),
+                            child: Text(
+                              '${cart.itemCount}',
+                              style: AppTextStyles.labelLarge.copyWith(color: AppColors.navyDeep),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'View Cart',
+                              style: AppTextStyles.labelLarge.copyWith(color: AppColors.navyDeep),
+                            ),
+                          ),
+                          Text(
+                            'Tsh ${cart.subtotal.toInt()}',
+                            style: AppTextStyles.labelLarge.copyWith(color: AppColors.navyDeep),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
-              ),
+
+                // Add to Cart row
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        color: AppColors.navyMedium,
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                        border: Border.all(color: AppColors.navyAccent, width: 0.5),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () => setState(() => _qty = (_qty - 1).clamp(1, 99)),
+                            icon: const Icon(Icons.remove_rounded, size: 18, color: AppColors.textSecondary),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                          ),
+                          Text('$_qty', style: AppTextStyles.h3),
+                          IconButton(
+                            onPressed: () => setState(() => _qty++),
+                            icon: const Icon(Icons.add_rounded, size: 18, color: AppColors.goldBright),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ChakulaChapButton(
+                        label: 'Add to Cart · Tsh ${_total.toInt()}',
+                        onPressed: _item!.isAvailable ? _addToCart : null,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ChakulaChapButton(
-                label: 'Add to Cart · Tsh ${_total.toInt()}',
-                onPressed: _item!.isAvailable ? _addToCart : null,
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
