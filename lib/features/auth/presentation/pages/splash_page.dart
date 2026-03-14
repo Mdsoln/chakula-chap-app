@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_constants.dart';
@@ -17,21 +16,11 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
+class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
     _decideNextRoute();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   Future<void> _decideNextRoute() async {
@@ -61,74 +50,15 @@ class _SplashPageState extends State<SplashPage>
         decoration: const BoxDecoration(gradient: AppColors.heroGradient),
         child: Stack(
           children: [
-            // Gold glow top right
-            Positioned(
-              top: -100,
-              right: -100,
-              child: Container(
-                width: 400,
-                height: 400,
-                decoration: const BoxDecoration(
-                  gradient: AppColors.goldGlowGradient,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            // Gold glow bottom left
-            Positioned(
-              bottom: -80,
-              left: -60,
-              child: Container(
-                width: 280,
-                height: 280,
-                decoration: const BoxDecoration(
-                  gradient: AppColors.goldGlowGradient,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
+            const _GoldGlow(top: -100, right: -100, size: 400),
+            const _GoldGlow(bottom: -80, left: -60, size: 280),
             Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 180,
-                    height: 180,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.goldBright,
-                        width: 3,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.goldBright.withOpacity(0.3),
-                          blurRadius: 24,
-                          spreadRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        AppConstants.splashIcon,
-                        width: 180,
-                        height: 180,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  const _SplashIcon(),
                   const SizedBox(height: AppDimensions.spaceLg),
-                  // Logotype
-                  const Text(
-                    'ChakulaChap',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 30,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.goldBright,
-                      letterSpacing: 8,
-                    ),
-                  ),
+                  const _AppLogotype(),
                   const SizedBox(height: AppDimensions.spaceXs),
                   Text(
                     AppConstants.appTagline,
@@ -138,22 +68,11 @@ class _SplashPageState extends State<SplashPage>
                     ),
                   ),
                   const SizedBox(height: AppDimensions.space3xl),
-                  // Loading dots
-                  _LoadingDots(),
+                  const _LoadingDots(),
                 ],
               ),
             ),
-            // Version tag
-            const Positioned(
-              bottom: 32,
-              left: 0,
-              right: 0,
-              child: Text(
-                'v${AppConstants.appVersion}',
-                style: AppTextStyles.caption,
-                textAlign: TextAlign.center,
-              ),
-            ),
+            const _VersionTag(),
           ],
         ),
       ),
@@ -161,7 +80,115 @@ class _SplashPageState extends State<SplashPage>
   }
 }
 
+// ─── Sub-widgets ────────────────────────────────────────────────────────────
+
+class _GoldGlow extends StatelessWidget {
+  const _GoldGlow({
+    this.top,
+    this.bottom,
+    this.left,
+    this.right,
+    required this.size,
+  });
+
+  final double? top;
+  final double? bottom;
+  final double? left;
+  final double? right;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: top,
+      bottom: bottom,
+      left: left,
+      right: right,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: const BoxDecoration(
+          gradient: AppColors.goldGlowGradient,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+}
+
+class _SplashIcon extends StatelessWidget {
+  const _SplashIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 180,
+      height: 180,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: AppColors.goldBright,
+          width: 3,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.goldBright.withOpacity(0.3),
+            blurRadius: 24,
+            spreadRadius: 4,
+          ),
+        ],
+      ),
+      child: ClipOval(
+        child: Image.asset(
+          AppConstants.splashIcon,
+          width: 180,
+          height: 180,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+}
+
+class _AppLogotype extends StatelessWidget {
+  const _AppLogotype();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'ChakulaChap',
+      style: TextStyle(
+        fontFamily: 'Poppins',
+        fontSize: 30,
+        fontWeight: FontWeight.w800,
+        color: AppColors.goldBright,
+        letterSpacing: 8,
+      ),
+    );
+  }
+}
+
+class _VersionTag extends StatelessWidget {
+  const _VersionTag();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Positioned(
+      bottom: 32,
+      left: 0,
+      right: 0,
+      child: Text(
+        'v${AppConstants.appVersion}',
+        style: AppTextStyles.caption,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
 class _LoadingDots extends StatefulWidget {
+  const _LoadingDots();
+
   @override
   State<_LoadingDots> createState() => _LoadingDotsState();
 }
