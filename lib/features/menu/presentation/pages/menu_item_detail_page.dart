@@ -221,27 +221,31 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
       ('⏱', '${_item!.prepTimeMinutes} min', 'prep'),
       ('🔥', '${_item!.calories}', 'cal'),
     ];
+
     return Row(
-      children: stats.map((s) => Expanded(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceCard,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-            border: Border.all(color: AppColors.navyAccent, width: 0.5),
+      children: [
+        for (int i = 0; i < stats.length; i++) ...[
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceCard,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                border: Border.all(color: AppColors.navyAccent, width: 0.5),
+              ),
+              child: Column(
+                children: [
+                  Text(stats[i].$1, style: const TextStyle(fontSize: 18)),
+                  const SizedBox(height: 2),
+                  Text(stats[i].$2, style: AppTextStyles.labelLarge),
+                  Text(stats[i].$3, style: AppTextStyles.bodySmall),
+                ],
+              ),
+            ),
           ),
-          child: Column(
-            children: [
-              Text(s.$1, style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 2),
-              Text(s.$2, style: AppTextStyles.labelLarge),
-              Text(s.$3, style: AppTextStyles.bodySmall),
-            ],
-          ),
-        ),
-      )).toList()
-        ..insert(1, const SizedBox(width: 8) as Expanded)
-        ..insert(3, const SizedBox(width: 8) as Expanded),
+          if (i < stats.length - 1) const SizedBox(width: 8),
+        ],
+      ],
     );
   }
 
