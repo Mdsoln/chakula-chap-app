@@ -91,17 +91,31 @@ class _SplashPageState extends State<SplashPage>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Lottie animation
-                  Lottie.asset(
-                    AppConstants.lottieSplash,
-                    controller: _controller,
+                  Container(
                     width: 180,
                     height: 180,
-                    onLoaded: (composition) {
-                      _controller
-                        ..duration = composition.duration
-                        ..repeat();
-                    },
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.goldBright,
+                        width: 3,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.goldBright.withOpacity(0.3),
+                          blurRadius: 24,
+                          spreadRadius: 4,
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        AppConstants.splashIcon,
+                        width: 180,
+                        height: 180,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: AppDimensions.spaceLg),
                   // Logotype
@@ -109,7 +123,7 @@ class _SplashPageState extends State<SplashPage>
                     'ChakulaChap',
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 44,
+                      fontSize: 30,
                       fontWeight: FontWeight.w800,
                       color: AppColors.goldBright,
                       letterSpacing: 8,
