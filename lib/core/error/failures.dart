@@ -53,6 +53,10 @@ class ValidationFailure extends Failure {
   List<Object?> get props => [message, statusCode, fieldErrors];
 }
 
+class LocationFailure extends Failure {
+  const LocationFailure({super.message = 'Could not determine location.'});
+}
+
 // ── Local Failures ────────────────────────────────────────────────────────────
 
 class CacheFailure extends Failure {

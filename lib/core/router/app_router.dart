@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../features/auth/presentation/pages/registration_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
@@ -187,6 +188,14 @@ class AppRouter {
         pageBuilder: (ctx, state) => _buildSlideTransition(
           state,
           OtpPage(phone: state.extra as String),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.registration,
+        name: 'registration',
+        pageBuilder: (ctx, state) => _buildSlideTransition(
+          state,
+          RegistrationPage(phone: state.extra as String),
         ),
       ),
 

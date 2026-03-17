@@ -14,6 +14,7 @@ abstract class AuthLocalDataSource {
   Future<String?> getRefreshToken();
   Future<void> clearSession();
   Future<bool> get isLoggedIn;
+  Future<void> cacheUser(UserModel user);
 }
 
 @Injectable(as: AuthLocalDataSource)
@@ -83,4 +84,17 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     final token = await _secureStorage.read(key: AppConstants.kAccessToken);
     return token != null;
   }
+
+  @override
+  Future<void> cacheUser(UserModel user) async {
+    try {
+      await _prefs.setString(
+        AppConstants.kCachedUser,
+        jsonEncode(user.toJson()),
+      );
+    } catch (e) {
+      throw StorageException(message: 'Failed to cache user: $e');
+    }
+  }
+
 }

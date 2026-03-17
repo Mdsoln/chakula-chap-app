@@ -36,6 +36,18 @@ class AuthSessionEntity extends Equatable {
     required this.expiresAt,
   });
 
+  UserEntity copyWith({String? name, String? email, String? avatarUrl}) {
+    return UserEntity(
+      id: user.id,
+      phone: user.phone,
+      name: name ?? user.name,
+      email: email ?? user.email,
+      avatarUrl: avatarUrl ?? user.avatarUrl,
+      isVerified: user.isVerified,
+      createdAt: user.createdAt,
+    );
+  }
+
   bool get isExpired => DateTime.now().isAfter(expiresAt);
 
   @override

@@ -9,6 +9,7 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../auth/presentation/block/registration_bloc.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../menu/domain/entities/menu_item_entity.dart';
 import '../../../menu/presentation/bloc/menu_bloc.dart';
@@ -24,7 +25,12 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => getIt<MenuBloc>()..add(const LoadMenuEvent())),
+        BlocProvider(
+            create: (_) => getIt<MenuBloc>()..add(const LoadMenuEvent())
+        ),
+        BlocProvider(
+          create: (_) => getIt<RegistrationBloc>()..add(FetchLocationEvent())
+        ),
       ],
       child: const _HomeView(),
     );
@@ -127,10 +133,47 @@ class _HomeViewState extends State<_HomeView> {
                       const SizedBox(width: 3),
                       Text('Delivering to', style: AppTextStyles.caption.copyWith(color: AppColors.textMuted)),
                     ]),
-                    const Row(children: [
-                      Text('Kagera,Magomeni', style: AppTextStyles.labelLarge),
-                      Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.goldBright, size: 18),
-                    ]),
+                    BlocBuilder<RegistrationBloc, RegistrationState>(
+                      builder: (context, state) {
+                        return Row(
+                          children: [
+                            Flexible(
+                              child: switch (state) {
+                                LocationLoadingState() => Text(
+                                  'Detecting...',
+                                  style: AppTextStyles.labelLarge.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                                LocationFetchedState(location: final loc) => Text(
+                                  loc.displayName,
+                                  style: AppTextStyles.labelLarge,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                RegistrationErrorState() => Text(
+                                  'Location unavailable',
+                                  style: AppTextStyles.labelLarge.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                                _ => Text(
+                                  'Set location',
+                                  style: AppTextStyles.labelLarge.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                              },
+                            ),
+                            const Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: AppColors.goldBright,
+                              size: 18,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
