@@ -16,6 +16,7 @@ abstract class AppConstants {
   static const String kUserId        = 'user_id';
   static const String kUserPhone     = 'user_phone';
   static const String kOnboardingDone = 'onboarding_done';
+  static const String kCachedUser     = 'cached_user';
   static const String kCartBox       = 'cart_box';
   static const String kMenuCacheBox  = 'menu_cache_box';
 
@@ -47,8 +48,9 @@ abstract class AppConstants {
   static const String lottieOrderTracking  = 'assets/animations/order_tracking.json';
   static const String lottieDelivery       = 'assets/animations/delivery.json';
   static const String lottieNoInternet     = 'assets/animations/no_internet.json';
+  static const String lottieError          = 'assets/animations/error.json';
   static const String lottieSplash         = 'assets/animations/splash.json';
-  static const String splashIcon   = 'assets/icons/splashIcon.png';
+  static const String splashIcon           = 'assets/icons/splashIcon.png';
   static const String lottiePayment        = 'assets/animations/payment.json';
 }
 
@@ -58,6 +60,7 @@ abstract class AppRoutes {
   static const String onboarding     = '/onboarding';
   static const String login          = '/login';
   static const String otp            = '/otp';
+  static const String registration = '/registration';
   static const String home           = '/home';
   static const String menuItemDetail = '/menu/item/:id';
   static const String cart           = '/cart';
@@ -76,6 +79,7 @@ abstract class ApiEndpoints {
   static const String verifyOtp   = '/auth/otp/verify';
   static const String refreshToken = '/auth/token/refresh';
   static const String logout      = '/auth/logout';
+  static const String profile = '/auth/profile';
 
   // Menu
   static const String categories  = '/menu/categories';

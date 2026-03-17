@@ -105,4 +105,29 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> get isAuthenticated => _local.isLoggedIn;
+
+  @override
+  Future<Either<Failure, UserEntity>> completeProfile({
+    required String fullName,
+    String? email,
+  }) async {
+    try {
+      final userModel = await _remote.completeProfile(
+        fullName: fullName,
+        email: email,
+      );
+      await _local.cacheUser(userModel);
+      return Right(userModel.toEntity());
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(message: e.message, fieldErrors: e.fieldErrors));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
+    } on StorageException catch (e) {
+      return Left(StorageFailure(message: e.message));
+    } catch (_) {
+      return const Left(UnexpectedFailure());
+    }
+  }
 }

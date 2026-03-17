@@ -72,30 +72,35 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
 
   // ── Extended API used by registration flow ─────────────────────────────────
 
-  /// Call this after OTP verification when user provides profile details.
-  Future<AuthSessionModel> completeProfile({
-    required String phone,
-    required String name,
+  @override
+  Future<UserModel> completeProfile({
+    required String fullName,
     String? email,
   }) async {
     await Future.delayed(const Duration(milliseconds: 800));
 
-    final existing = _users[phone];
-    if (existing == null) {
-      throw const ServerException(
-        message: 'User session not found.',
-        statusCode: 404,
-      );
-    }
+    final entry = _users.entries.firstWhere(
+          (e) => e.value.name == null,
+      orElse: () => _users.entries.last,
+    );
 
     final updated = _RegisteredUser(
-      id: existing.id,
-      phone: phone,
-      name: name,
+      id: entry.value.id,
+      phone: entry.value.phone,
+      name: fullName,
       email: email,
     );
-    _users[phone] = updated;
-    return _buildSession(updated);
+    _users[entry.key] = updated;
+
+    return UserModel(
+      id: updated.id,
+      phone: updated.phone,
+      name: updated.name!,
+      email: updated.email,
+      avatarUrl: null,
+      isVerified: true,
+      createdAt: DateTime.now(),
+    );
   }
 
   @override
@@ -123,7 +128,7 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
       user: UserModel(
         id: user.id,
         phone: user.phone,
-        name: user.name ?? 'ChakulaChap User',
+        name: user.name,
         email: user.email,
         avatarUrl: null,
         isVerified: true,

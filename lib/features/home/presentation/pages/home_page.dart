@@ -9,6 +9,8 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../auth/domain/entities/user_entity.dart';
+import '../../../auth/presentation/block/registration_bloc.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../menu/domain/entities/menu_item_entity.dart';
 import '../../../menu/presentation/bloc/menu_bloc.dart';
@@ -18,21 +20,29 @@ import '../widgets/category_chip.dart';
 import '../widgets/featured_banner.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final UserEntity? user;
+  const HomePage({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => getIt<MenuBloc>()..add(const LoadMenuEvent())),
+        BlocProvider(
+            create: (_) => getIt<MenuBloc>()..add(const LoadMenuEvent())
+        ),
+        BlocProvider(
+          create: (_) => getIt<RegistrationBloc>()..add(FetchLocationEvent())
+        ),
       ],
-      child: const _HomeView(),
+      child: _HomeView(user: user),
     );
   }
 }
 
 class _HomeView extends StatefulWidget {
-  const _HomeView();
+  final UserEntity? user;
+  const _HomeView({this.user});
+
   @override
   State<_HomeView> createState() => _HomeViewState();
 }
@@ -74,6 +84,7 @@ class _HomeViewState extends State<_HomeView> {
             controller: _scrollController,
             slivers: [
               _appBar(),
+              _greetingBanner(),
               _searchBar(),
               _featuredBanner(),
               _categoryRow(),
@@ -127,35 +138,82 @@ class _HomeViewState extends State<_HomeView> {
                       const SizedBox(width: 3),
                       Text('Delivering to', style: AppTextStyles.caption.copyWith(color: AppColors.textMuted)),
                     ]),
-                    const Row(children: [
-                      Text('Kagera,Magomeni', style: AppTextStyles.labelLarge),
-                      Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.goldBright, size: 18),
-                    ]),
+                    BlocBuilder<RegistrationBloc, RegistrationState>(
+                      builder: (context, state) {
+                        return Row(
+                          children: [
+                            Flexible(
+                              child: switch (state) {
+                                LocationLoadingState() => Text(
+                                  'Detecting...',
+                                  style: AppTextStyles.labelLarge.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                                LocationFetchedState(location: final loc) => Text(
+                                  loc.displayName,
+                                  style: AppTextStyles.labelLarge,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                RegistrationErrorState() => Text(
+                                  'Location unavailable',
+                                  style: AppTextStyles.labelLarge.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                                _ => Text(
+                                  'Set location',
+                                  style: AppTextStyles.labelLarge.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                              },
+                            ),
+                            const Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: AppColors.goldBright,
+                              size: 18,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
-              Stack(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceCard,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.navyAccent, width: 0.5),
+              GestureDetector(
+                onTap: () => context.push(AppRoutes.notifications),
+                child: Stack(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceCard,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.navyAccent, width: 0.5),
+                      ),
+                      child: const Icon(
+                        Icons.notifications_outlined,
+                        color: AppColors.textSecondary,
+                        size: 20,
+                      ),
                     ),
-                    child: const Icon(Icons.notifications_outlined, color: AppColors.textSecondary, size: 20),
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      width: 7,
-                      height: 7,
-                      decoration: const BoxDecoration(color: AppColors.goldBright, shape: BoxShape.circle),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        width: 7,
+                        height: 7,
+                        decoration: const BoxDecoration(
+                          color: AppColors.goldBright,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -163,6 +221,71 @@ class _HomeViewState extends State<_HomeView> {
       ),
     ),
   );
+
+  SliverToBoxAdapter _greetingBanner() {
+    final firstName = widget.user?.name?.split(' ').first ?? 'there';
+    final phone = widget.user?.phone ?? '';
+    final email = widget.user?.email;
+
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceCard,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+            border: Border.all(color: AppColors.navyAccent, width: 0.5),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: const BoxDecoration(
+                  gradient: AppColors.goldGradient,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    (widget.user?.name?.isNotEmpty == true)
+                        ? widget.user!.name![0].toUpperCase()
+                        : '?',
+                    style: AppTextStyles.h2.copyWith(color: AppColors.navyDeep),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello, $firstName',
+                      style: AppTextStyles.h3,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      phone,
+                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    ),
+                    if (email != null) ...[
+                      const SizedBox(height: 1),
+                      Text(
+                        email,
+                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   SliverToBoxAdapter _searchBar() => SliverToBoxAdapter(
     child: Padding(
@@ -416,8 +539,16 @@ class _HomeViewState extends State<_HomeView> {
         children: [
           _NavItem(icon: Icons.home_rounded, label: 'Home', isActive: true, onTap: () {}),
           _NavItem(icon: Icons.explore_rounded, label: 'Explore', onTap: () {}),
-          _NavItem(icon: Icons.receipt_long_rounded, label: 'Orders', onTap: () {}),
-          _NavItem(icon: Icons.person_rounded, label: 'Profile', onTap: () {}),
+          _NavItem(
+            icon: Icons.receipt_long_rounded,
+            label: 'Orders',
+            onTap: () => context.push(AppRoutes.orderHistory),
+          ),
+          _NavItem(
+              icon: Icons.person_rounded,
+              label: 'Profile',
+              onTap: () => context.push(AppRoutes.profile, extra: widget.user)
+          ),
         ],
       ),
     ),

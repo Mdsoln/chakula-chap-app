@@ -10,6 +10,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Mock datasources
 import '../../features/auth/data/datasources/auth_mock_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
+import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../features/auth/domain/usecases/complete_profile_usecase.dart';
+import '../../features/auth/presentation/block/registration_bloc.dart';
+import '../../features/location/data/repositories/location_repository_impl.dart';
+import '../../features/location/domain/repositories/location_repository.dart';
+import '../../features/location/domain/usecases/get_current_location_usecase.dart';
 import '../../features/menu/data/datasources/menu_mock_datasource.dart';
 import '../../features/menu/data/datasources/menu_remote_datasource.dart';
 import '../../features/order_tracking/data/datasources/order_remote_datasource.dart';
@@ -44,6 +50,26 @@ void _registerMocks() {
   getIt.unregister<AuthRemoteDataSource>();
   getIt.registerLazySingleton<AuthRemoteDataSource>(
         () => MockAuthRemoteDataSource.instance,
+  );
+
+  getIt.registerFactory<RegistrationBloc>(
+        () => RegistrationBloc(
+          getIt<CompleteProfileUseCase>(),
+          getIt<GetCurrentLocationUseCase>(),
+        ),
+  );
+
+  getIt.registerFactory<CompleteProfileUseCase>(
+        () => CompleteProfileUseCase(getIt<AuthRepository>()),
+  );
+
+  getIt.registerFactory<GetCurrentLocationUseCase>(
+        () => GetCurrentLocationUseCase(getIt<LocationRepository>()),
+  );
+
+  getIt.unregister<LocationRepository>();
+  getIt.registerLazySingleton<LocationRepository>(
+        () => LocationRepositoryImpl(),
   );
 
   // ── Menu ────────────────────────────────────────────────────────────────────

@@ -119,7 +119,7 @@ class ChakulaChapErrorState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Lottie.asset(AppConstants.lottieNoInternet, width: 180, height: 180),
+            Lottie.asset(AppConstants.lottieError, width: 180, height: 180),
             const SizedBox(height: AppDimensions.spaceMd),
             const Text('Oops!', style: AppTextStyles.h1),
             const SizedBox(height: AppDimensions.spaceSm),

@@ -100,7 +100,11 @@ class _OtpViewState extends State<_OtpView> {
           setState(() => _isVerifying = false);
         }
         if (state is AuthenticatedState) {
-          context.go(AppRoutes.home);
+          if (state.user.name == null || state.user.name!.isEmpty) {
+            context.go(AppRoutes.registration, extra: state.user.phone);
+          } else {
+            context.go(AppRoutes.home, extra: state.user);
+          }
         }
         if (state is AuthErrorState) {
           _pinController.clear();
@@ -120,7 +124,7 @@ class _OtpViewState extends State<_OtpView> {
                     const SizedBox(height: AppDimensions.spaceMd),
                     _buildBackButton(context),
                     const SizedBox(height: AppDimensions.spaceLg),
-                    _buildIllustration(),
+                    //_buildIllustration(),
                     const SizedBox(height: AppDimensions.spaceLg),
                     _buildHeader(),
                     const SizedBox(height: AppDimensions.spaceXl),
@@ -157,22 +161,22 @@ class _OtpViewState extends State<_OtpView> {
     );
   }
 
-  Widget _buildIllustration() {
-    return Center(
-      child: Lottie.asset(
-        AppConstants.lottiePayment,
-        width: 160,
-        height: 160,
-        fit: BoxFit.contain,
-      ),
-    );
-  }
+  // Widget _buildIllustration() {
+  //   return Center(
+  //     child: Lottie.asset(
+  //       AppConstants.lottiePayment,
+  //       width: 160,
+  //       height: 160,
+  //       fit: BoxFit.contain,
+  //     ),
+  //   );
+  // }
 
   Widget _buildHeader() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Verify your\nnumber 📱', style: AppTextStyles.displayMedium),
+        const Text('Verify your number', style: AppTextStyles.displayMedium),
         const SizedBox(height: AppDimensions.spaceSm),
         Text.rich(
           TextSpan(

@@ -23,6 +23,15 @@ abstract class AppTextStyles {
     height: 1.1,
   );
 
+  static const TextStyle displaySmall = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 26,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    letterSpacing: -0.5,
+    height: 1.9,
+  );
+
   // ── Headings ──────────────────────────────────────────────
   static const TextStyle h1 = TextStyle(
     fontFamily: _fontFamily,

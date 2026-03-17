@@ -5,13 +5,18 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../features/auth/domain/entities/user_entity.dart';
+import '../../features/auth/presentation/pages/registration_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/menu/domain/entities/menu_item_entity.dart';
 import '../../features/menu/presentation/pages/menu_item_detail_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/order_tracking/presentation/pages/order_confirm_page.dart';
+import '../../features/order_tracking/presentation/pages/order_history_page.dart';
 import '../../features/order_tracking/presentation/pages/order_tracking_page.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
 import '../constants/app_constants.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
@@ -189,6 +194,14 @@ class AppRouter {
           OtpPage(phone: state.extra as String),
         ),
       ),
+      GoRoute(
+        path: AppRoutes.registration,
+        name: 'registration',
+        pageBuilder: (ctx, state) => _buildSlideTransition(
+          state,
+          RegistrationPage(phone: state.extra as String),
+        ),
+      ),
 
       // ── Main App (Protected) ─────────────────────────────
       GoRoute(
@@ -196,7 +209,15 @@ class AppRouter {
         name: 'home',
         pageBuilder: (ctx, state) => _buildFadeTransition(
           state,
-          const HomePage(),
+          HomePage(user: state.extra as UserEntity?),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.profile,
+        name: 'profile',
+        pageBuilder: (ctx, state) => _buildSlideTransition(
+          state,
+          ProfilePage(user: state.extra as UserEntity?),
         ),
       ),
       GoRoute(
@@ -240,6 +261,22 @@ class AppRouter {
         pageBuilder: (ctx, state) => _buildSlideTransition(
           state,
           OrderTrackingPage(orderId: state.pathParameters['orderId']!),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        name: 'notifications',
+        pageBuilder: (ctx, state) => _buildSlideTransition(
+          state,
+          const NotificationsPage(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.orderHistory,
+        name: 'order-history',
+        pageBuilder: (ctx, state) => _buildSlideTransition(
+          state,
+          const OrderHistoryPage(),
         ),
       ),
     ],

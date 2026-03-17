@@ -24,4 +24,9 @@ abstract class AuthRepository {
 
   /// Check if user has a valid session
   Future<bool> get isAuthenticated;
+
+  Future<Either<Failure, UserEntity>> completeProfile({
+    required String fullName,
+    String? email,
+  });
 }

@@ -10,6 +10,7 @@ abstract class AuthRemoteDataSource {
   Future<AuthSessionModel> verifyOtp({required String phone, required String otp});
   Future<AuthSessionModel> refreshToken(String refreshToken);
   Future<bool> logout();
+  Future<UserModel> completeProfile({required String fullName, String? email});
 }
 
 @Injectable(as: AuthRemoteDataSource)
@@ -73,4 +74,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw DioErrorMapper.map(e);
     }
   }
+
+  @override
+  Future<UserModel> completeProfile({
+    required String fullName,
+    String? email,
+  }) async {
+    try {
+      final res = await _client.dio.patch(
+        ApiEndpoints.profile,
+        data: {
+          'name': fullName,
+          if (email != null) 'email': email,
+        },
+      );
+      return UserModel.fromJson(res.data['data'] as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw DioErrorMapper.map(e);
+    }
+  }
+
 }
