@@ -12,7 +12,9 @@ import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/menu/domain/entities/menu_item_entity.dart';
 import '../../features/menu/presentation/pages/menu_item_detail_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/order_tracking/presentation/pages/order_confirm_page.dart';
+import '../../features/order_tracking/presentation/pages/order_history_page.dart';
 import '../../features/order_tracking/presentation/pages/order_tracking_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../constants/app_constants.dart';
@@ -259,6 +261,22 @@ class AppRouter {
         pageBuilder: (ctx, state) => _buildSlideTransition(
           state,
           OrderTrackingPage(orderId: state.pathParameters['orderId']!),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        name: 'notifications',
+        pageBuilder: (ctx, state) => _buildSlideTransition(
+          state,
+          const NotificationsPage(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.orderHistory,
+        name: 'order-history',
+        pageBuilder: (ctx, state) => _buildSlideTransition(
+          state,
+          const OrderHistoryPage(),
         ),
       ),
     ],

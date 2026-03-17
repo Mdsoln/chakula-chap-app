@@ -48,8 +48,9 @@ abstract class AppConstants {
   static const String lottieOrderTracking  = 'assets/animations/order_tracking.json';
   static const String lottieDelivery       = 'assets/animations/delivery.json';
   static const String lottieNoInternet     = 'assets/animations/no_internet.json';
+  static const String lottieError          = 'assets/animations/error.json';
   static const String lottieSplash         = 'assets/animations/splash.json';
-  static const String splashIcon   = 'assets/icons/splashIcon.png';
+  static const String splashIcon           = 'assets/icons/splashIcon.png';
   static const String lottiePayment        = 'assets/animations/payment.json';
 }
 

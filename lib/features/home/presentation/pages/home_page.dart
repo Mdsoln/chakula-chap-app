@@ -182,28 +182,38 @@ class _HomeViewState extends State<_HomeView> {
                   ],
                 ),
               ),
-              Stack(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceCard,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.navyAccent, width: 0.5),
+              GestureDetector(
+                onTap: () => context.push(AppRoutes.notifications),
+                child: Stack(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceCard,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.navyAccent, width: 0.5),
+                      ),
+                      child: const Icon(
+                        Icons.notifications_outlined,
+                        color: AppColors.textSecondary,
+                        size: 20,
+                      ),
                     ),
-                    child: const Icon(Icons.notifications_outlined, color: AppColors.textSecondary, size: 20),
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      width: 7,
-                      height: 7,
-                      decoration: const BoxDecoration(color: AppColors.goldBright, shape: BoxShape.circle),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        width: 7,
+                        height: 7,
+                        decoration: const BoxDecoration(
+                          color: AppColors.goldBright,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -529,7 +539,11 @@ class _HomeViewState extends State<_HomeView> {
         children: [
           _NavItem(icon: Icons.home_rounded, label: 'Home', isActive: true, onTap: () {}),
           _NavItem(icon: Icons.explore_rounded, label: 'Explore', onTap: () {}),
-          _NavItem(icon: Icons.receipt_long_rounded, label: 'Orders', onTap: () {}),
+          _NavItem(
+            icon: Icons.receipt_long_rounded,
+            label: 'Orders',
+            onTap: () => context.push(AppRoutes.orderHistory),
+          ),
           _NavItem(
               icon: Icons.person_rounded,
               label: 'Profile',
