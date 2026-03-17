@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../features/auth/domain/entities/user_entity.dart';
 import '../../features/auth/presentation/pages/registration_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/checkout/presentation/pages/checkout_page.dart';
@@ -205,7 +206,7 @@ class AppRouter {
         name: 'home',
         pageBuilder: (ctx, state) => _buildFadeTransition(
           state,
-          const HomePage(),
+          HomePage(user: state.extra as UserEntity?),
         ),
       ),
       GoRoute(

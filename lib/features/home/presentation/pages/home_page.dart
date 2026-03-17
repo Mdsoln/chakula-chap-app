@@ -9,6 +9,7 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/presentation/block/registration_bloc.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../menu/domain/entities/menu_item_entity.dart';
@@ -19,7 +20,8 @@ import '../widgets/category_chip.dart';
 import '../widgets/featured_banner.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final UserEntity? user;
+  const HomePage({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +34,15 @@ class HomePage extends StatelessWidget {
           create: (_) => getIt<RegistrationBloc>()..add(FetchLocationEvent())
         ),
       ],
-      child: const _HomeView(),
+      child: _HomeView(user: user),
     );
   }
 }
 
 class _HomeView extends StatefulWidget {
-  const _HomeView();
+  final UserEntity? user;
+  const _HomeView({this.user});
+
   @override
   State<_HomeView> createState() => _HomeViewState();
 }
@@ -80,6 +84,7 @@ class _HomeViewState extends State<_HomeView> {
             controller: _scrollController,
             slivers: [
               _appBar(),
+              _greetingBanner(),
               _searchBar(),
               _featuredBanner(),
               _categoryRow(),
@@ -206,6 +211,71 @@ class _HomeViewState extends State<_HomeView> {
       ),
     ),
   );
+
+  SliverToBoxAdapter _greetingBanner() {
+    final firstName = widget.user?.name?.split(' ').first ?? 'there';
+    final phone = widget.user?.phone ?? '';
+    final email = widget.user?.email;
+
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceCard,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+            border: Border.all(color: AppColors.navyAccent, width: 0.5),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: const BoxDecoration(
+                  gradient: AppColors.goldGradient,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    (widget.user?.name?.isNotEmpty == true)
+                        ? widget.user!.name![0].toUpperCase()
+                        : '?',
+                    style: AppTextStyles.h2.copyWith(color: AppColors.navyDeep),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello, $firstName',
+                      style: AppTextStyles.h3,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      phone,
+                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    ),
+                    if (email != null) ...[
+                      const SizedBox(height: 1),
+                      Text(
+                        email,
+                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   SliverToBoxAdapter _searchBar() => SliverToBoxAdapter(
     child: Padding(
@@ -460,7 +530,11 @@ class _HomeViewState extends State<_HomeView> {
           _NavItem(icon: Icons.home_rounded, label: 'Home', isActive: true, onTap: () {}),
           _NavItem(icon: Icons.explore_rounded, label: 'Explore', onTap: () {}),
           _NavItem(icon: Icons.receipt_long_rounded, label: 'Orders', onTap: () {}),
-          _NavItem(icon: Icons.person_rounded, label: 'Profile', onTap: () {}),
+          _NavItem(
+              icon: Icons.person_rounded,
+              label: 'Profile',
+              onTap: () => context.push(AppRoutes.profile, extra: widget.user)
+          ),
         ],
       ),
     ),
