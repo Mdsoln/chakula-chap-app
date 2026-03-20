@@ -5,7 +5,7 @@ abstract class AppConstants {
   static const String appVersion     = '1.0.0';
 
   // ── API ───────────────────────────────────────────────────
-  static const String baseUrl        = 'https://localhost:90100/api/v1';
+  static const String baseUrl        = 'http://192.168.1.199:9000/api/v1';
   static const String wsBaseUrl      = 'wss://api.zetu.co.tz/ws';
   static const Duration connectTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);

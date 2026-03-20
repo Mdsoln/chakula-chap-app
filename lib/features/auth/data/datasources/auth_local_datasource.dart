@@ -14,13 +14,14 @@ abstract class AuthLocalDataSource {
   Future<String?> getRefreshToken();
   Future<void> clearSession();
   Future<bool> get isLoggedIn;
-  Future<void> cacheUser(UserModel user);
 }
 
 @Injectable(as: AuthLocalDataSource)
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final FlutterSecureStorage _secureStorage;
   final SharedPreferences _prefs;
+
+  static const _cachedUserKey = 'cached_user';
 
   AuthLocalDataSourceImpl(this._secureStorage, this._prefs);
 
@@ -41,7 +42,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
           value: session.user.id,
         ),
         _prefs.setString(
-          'cached_user',
+          _cachedUserKey,
           jsonEncode(session.user.toJson()),
         ),
       ]);
@@ -53,11 +54,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<UserModel?> getCachedUser() async {
     try {
-      final userJson = _prefs.getString('cached_user');
+      final userJson = _prefs.getString(_cachedUserKey);
       if (userJson == null) return null;
-      return UserModel.fromJson(
-        jsonDecode(userJson) as Map<String, dynamic>,
-      );
+      return UserModel.fromJson(jsonDecode(userJson) as Map<String, dynamic>);
     } catch (e) {
       throw CacheException(message: 'Failed to load cached user: $e');
     }
@@ -75,7 +74,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   Future<void> clearSession() async {
     await Future.wait([
       _secureStorage.deleteAll(),
-      _prefs.remove('cached_user'),
+      _prefs.remove(_cachedUserKey),
     ]);
   }
 
@@ -84,17 +83,4 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     final token = await _secureStorage.read(key: AppConstants.kAccessToken);
     return token != null;
   }
-
-  @override
-  Future<void> cacheUser(UserModel user) async {
-    try {
-      await _prefs.setString(
-        AppConstants.kCachedUser,
-        jsonEncode(user.toJson()),
-      );
-    } catch (e) {
-      throw StorageException(message: 'Failed to cache user: $e');
-    }
-  }
-
 }

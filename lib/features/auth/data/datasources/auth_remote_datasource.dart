@@ -6,8 +6,12 @@ import '../../../../core/network/network_client.dart';
 import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<bool> sendOtp(String phone);
-  Future<AuthSessionModel> verifyOtp({required String phone, required String otp});
+  Future<OtpSentModel> sendOtp(String phone);
+  Future<AuthSessionModel> verifyOtp({
+    required String phone,
+    required String otp,
+    String? deviceInfo,
+  });
   Future<AuthSessionModel> refreshToken(String refreshToken);
   Future<bool> logout();
   Future<UserModel> completeProfile({required String fullName, String? email});
@@ -20,13 +24,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this._client);
 
   @override
-  Future<bool> sendOtp(String phone) async {
+  Future<OtpSentModel> sendOtp(String phone) async {
     try {
-      await _client.dio.post(
+      final response = await _client.dio.post(
         ApiEndpoints.sendOtp,
         data: {'phone': phone},
       );
-      return true;
+      final data = response.data['data'] as Map<String, dynamic>;
+      return OtpSentModel.fromJson(data);
     } on DioException catch (e) {
       throw DioErrorMapper.map(e);
     }
@@ -36,15 +41,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthSessionModel> verifyOtp({
     required String phone,
     required String otp,
+    String? deviceInfo,
   }) async {
     try {
       final response = await _client.dio.post(
         ApiEndpoints.verifyOtp,
-        data: {'phone': phone, 'otp': otp},
+        data: {
+          'phone': phone,
+          'otp': otp,
+          if (deviceInfo != null) 'deviceInfo': deviceInfo,
+        },
       );
-      return AuthSessionModel.fromJson(
-        response.data as Map<String, dynamic>,
-      );
+      final data = response.data['data'] as Map<String, dynamic>;
+      return AuthSessionModel.fromJson(data);
     } on DioException catch (e) {
       throw DioErrorMapper.map(e);
     }
@@ -55,11 +64,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final response = await _client.dio.post(
         ApiEndpoints.refreshToken,
-        data: {'refresh_token': refreshToken},
+        data: {'refreshToken': refreshToken},
       );
-      return AuthSessionModel.fromJson(
-        response.data as Map<String, dynamic>,
-      );
+      final data = response.data['data'] as Map<String, dynamic>;
+      return AuthSessionModel.fromJson(data);
     } on DioException catch (e) {
       throw DioErrorMapper.map(e);
     }

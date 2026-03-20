@@ -4,15 +4,16 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/utils/use_case.dart';
+import '../entities/user_entity.dart';
 import '../repositories/auth_repository.dart';
 
 @injectable
-class SendOtpUseCase extends UseCase<bool, SendOtpParams> {
+class SendOtpUseCase extends UseCase<OtpSentEntity, SendOtpParams> {
   final AuthRepository _repository;
   SendOtpUseCase(this._repository);
 
   @override
-  Future<Either<Failure, bool>> call(SendOtpParams params) {
+  Future<Either<Failure, OtpSentEntity>> call(SendOtpParams params) {
     return _repository.sendOtp(params.phone);
   }
 }
