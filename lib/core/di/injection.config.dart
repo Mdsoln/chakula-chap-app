@@ -33,6 +33,8 @@ import '../../features/cart/domain/repositories/cart_repository.dart';
 import '../../features/cart/domain/usecases/cart_usecases.dart';
 import '../../features/cart/presentation/bloc/cart_bloc.dart';
 import '../../features/checkout/presentation/bloc/checkout_bloc.dart';
+import '../../features/location/data/repositories/location_repository_impl.dart';
+import '../../features/location/domain/repositories/location_repository.dart';
 import '../../features/location/domain/usecases/get_current_location_usecase.dart';
 import '../../features/menu/data/datasources/menu_local_datasource.dart';
 import '../../features/menu/data/datasources/menu_remote_datasource.dart';
@@ -86,6 +88,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<NetworkClient>(
           () => NetworkClient(gh<AuthInterceptor>(), gh<ConnectivityChecker>()),
+    );
+
+    // ── Location ──────────────────────────────────────────────────────────────
+    gh.factory<LocationRepository>(
+          () => LocationRepositoryImpl(),
+    );
+    gh.factory<GetCurrentLocationUseCase>(
+          () => GetCurrentLocationUseCase(gh<LocationRepository>()),
     );
 
     // ── Auth ──────────────────────────────────────────────────────────────────

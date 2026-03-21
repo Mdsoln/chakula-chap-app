@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -51,6 +52,7 @@ class _RegistrationViewState extends State<_RegistrationView> {
     FocusScope.of(context).unfocus();
     context.read<RegistrationBloc>().add(
       SubmitRegistrationEvent(
+        phone: widget.phone,
         fullName: _nameController.text.trim(),
         email: _emailController.text.trim().isEmpty
             ? null
@@ -149,14 +151,23 @@ class _RegistrationViewState extends State<_RegistrationView> {
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
+                        textCapitalization: TextCapitalization.none,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                          TextInputFormatter.withFunction((oldValue, newValue) {
+                            return newValue.copyWith(
+                              text: newValue.text.toLowerCase(),
+                            );
+                          }),
+                        ],
                         decoration: const InputDecoration(
                           hintText: 'e.g. mdsoln@chakulachap.co.tz',
                           prefixIcon: Icon(Icons.email_outlined),
                         ),
                         validator: (v) {
                           if (v == null || v.trim().isEmpty) return null;
-                          final emailRegex = RegExp(
-                              r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                          final emailRegex =
+                          RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
                           if (!emailRegex.hasMatch(v.trim())) {
                             return 'Enter a valid email address';
                           }

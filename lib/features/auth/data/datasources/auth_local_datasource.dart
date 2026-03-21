@@ -10,6 +10,7 @@ import '../models/user_model.dart';
 abstract class AuthLocalDataSource {
   Future<void> cacheSession(AuthSessionModel session);
   Future<UserModel?> getCachedUser();
+  Future<void> cacheUpdatedUser(UserModel user);
   Future<String?> getAccessToken();
   Future<String?> getRefreshToken();
   Future<void> clearSession();
@@ -48,6 +49,18 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       ]);
     } catch (e) {
       throw StorageException(message: 'Failed to save session: $e');
+    }
+  }
+
+  @override
+  Future<void> cacheUpdatedUser(UserModel user) async {
+    try {
+      await _prefs.setString(
+        'cached_user',
+        jsonEncode(user.toJson()),
+      );
+    } catch (e) {
+      throw StorageException(message: 'Failed to update cached user: $e');
     }
   }
 

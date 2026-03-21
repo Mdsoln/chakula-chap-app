@@ -196,10 +196,18 @@ class AppRouter {
         path: AppRoutes.registration,
         name: 'registration',
         pageBuilder: (ctx, state) {
-          final user = state.extra as UserEntity;
+          String phone = '';
+          if (state.extra is UserEntity) {
+            phone = (state.extra as UserEntity).phone;
+          } else {
+            phone = Uri.decodeComponent(
+              state.uri.queryParameters['phone'] ?? '',
+            );
+          }
+
           return _buildSlideTransition(
             state,
-            RegistrationPage(phone: user.phone),
+            RegistrationPage(phone: phone),
           );
         },
       ),
@@ -279,7 +287,7 @@ class AppRouter {
       final userResult = await _authRepo.getCurrentUser();
       final user = userResult.fold((_) => null, (u) => u);
       if (user != null && !user.isProfileComplete) {
-        return AppRoutes.registration;
+        return '${AppRoutes.registration}?phone=${Uri.encodeComponent(user.phone)}';
       }
     }
     return null;

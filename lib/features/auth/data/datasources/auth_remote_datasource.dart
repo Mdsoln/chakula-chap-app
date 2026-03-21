@@ -14,7 +14,7 @@ abstract class AuthRemoteDataSource {
   });
   Future<AuthSessionModel> refreshToken(String refreshToken);
   Future<bool> logout();
-  Future<UserModel> completeProfile({required String fullName, String? email});
+  Future<UserModel> completeProfile({required String phone, required String fullName, String? email});
 }
 
 @Injectable(as: AuthRemoteDataSource)
@@ -85,13 +85,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> completeProfile({
+    required String phone,
     required String fullName,
     String? email,
   }) async {
     try {
-      final res = await _client.dio.patch(
+      final res = await _client.dio.post(
         ApiEndpoints.profile,
         data: {
+          'phone': phone,
           'name': fullName,
           if (email != null) 'email': email,
         },

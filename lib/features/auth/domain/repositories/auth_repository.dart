@@ -20,6 +20,7 @@ abstract class AuthRepository {
   Future<bool> get isAuthenticated;
 
   Future<Either<Failure, UserEntity>> completeProfile({
+    required String phone,
     required String fullName,
     String? email,
   });

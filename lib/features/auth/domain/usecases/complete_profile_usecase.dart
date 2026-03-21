@@ -16,16 +16,18 @@ class CompleteProfileUseCase extends UseCase<UserEntity, CompleteProfileParams> 
   @override
   Future<Either<Failure, UserEntity>> call(CompleteProfileParams params) =>
       _repo.completeProfile(
+        phone: params.phone,
         fullName: params.fullName,
         email: params.email,
       );
 }
 
 class CompleteProfileParams extends Equatable {
+  final String phone;
   final String fullName;
   final String? email; // optional
 
-  const CompleteProfileParams({required this.fullName, this.email});
+  const CompleteProfileParams({required this.phone,required this.fullName, this.email});
 
   @override
   List<Object?> get props => [fullName, email];

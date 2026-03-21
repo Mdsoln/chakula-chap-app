@@ -113,15 +113,17 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, UserEntity>> completeProfile({
+    required String phone,
     required String fullName,
     String? email,
   }) async {
     try {
       final userModel = await _remote.completeProfile(
+        phone: phone,
         fullName: fullName,
         email: email,
       );
-      //await _local.cacheUser(userModel);
+      await _local.cacheUpdatedUser(userModel);
       return Right(userModel.toEntity());
     } on NetworkException {
       return const Left(NetworkFailure());

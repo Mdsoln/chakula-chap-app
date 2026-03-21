@@ -75,6 +75,7 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> completeProfile({
+    required String phone,
     required String fullName,
     String? email,
   }) async {
