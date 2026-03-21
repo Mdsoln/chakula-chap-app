@@ -10,6 +10,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/domain/entities/user_entity.dart';
+import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../auth/presentation/block/registration_bloc.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../menu/domain/entities/menu_item_entity.dart';
@@ -50,11 +51,29 @@ class _HomeView extends StatefulWidget {
 class _HomeViewState extends State<_HomeView> {
   final _searchController = TextEditingController();
   final _scrollController = ScrollController();
+  UserEntity? _user;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _user = widget.user;
+    if (_user == null) {
+      _loadUser();
+    }
+  }
+
+  Future<void> _loadUser() async {
+    final repo = getIt<AuthRepository>();
+    final result = await repo.getCurrentUser();
+    result.fold(
+          (_) => null,
+          (user) {
+        if (mounted && user != null) {
+          setState(() => _user = user);
+        }
+      },
+    );
   }
 
   @override
@@ -223,9 +242,9 @@ class _HomeViewState extends State<_HomeView> {
   );
 
   SliverToBoxAdapter _greetingBanner() {
-    final firstName = widget.user?.name?.split(' ').first ?? 'there';
-    final phone = widget.user?.phone ?? '';
-    final email = widget.user?.email;
+    final firstName = _user?.name?.split(' ').first ?? 'there';
+    final phone = _user?.phone ?? '';
+    final email = _user?.email;
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -248,9 +267,9 @@ class _HomeViewState extends State<_HomeView> {
                 ),
                 child: Center(
                   child: Text(
-                    (widget.user?.name?.isNotEmpty == true)
-                        ? widget.user!.name![0].toUpperCase()
-                        : '?',
+                    ((_user?.name?.isNotEmpty == true)
+                        ? _user!.name![0].toUpperCase()
+                        : '?'),
                     style: AppTextStyles.h2.copyWith(color: AppColors.navyDeep),
                   ),
                 ),
@@ -547,7 +566,7 @@ class _HomeViewState extends State<_HomeView> {
           _NavItem(
               icon: Icons.person_rounded,
               label: 'Profile',
-              onTap: () => context.push(AppRoutes.profile, extra: widget.user)
+              onTap: () => context.push(AppRoutes.profile, extra: _user)
           ),
         ],
       ),

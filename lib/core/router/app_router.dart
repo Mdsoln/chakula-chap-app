@@ -13,8 +13,11 @@ import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/menu/domain/entities/menu_item_entity.dart';
 import '../../features/menu/presentation/pages/menu_item_detail_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/order_tracking/presentation/pages/order_confirm_page.dart';
+import '../../features/order_tracking/presentation/pages/order_history_page.dart';
 import '../../features/order_tracking/presentation/pages/order_tracking_page.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
 import '../constants/app_constants.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
@@ -37,6 +40,21 @@ class _AppExtraEncoder extends Converter<Object?, Object?> {
   @override
   Object? convert(Object? input) {
     if (input == null) return null;
+
+    // ── UserEntity ────────────────────────────────────────────────────────
+    if (input is UserEntity) {
+      return <String, Object?>{
+        '__type': 'UserEntity',
+        'id': input.id,
+        'phone': input.phone,
+        'name': input.name,
+        'email': input.email,
+        'avatarUrl': input.avatarUrl,
+        'verified': input.verified,
+        'isProfileComplete': input.isProfileComplete,
+        'createdAt': input.createdAt.toIso8601String(),
+      };
+    }
 
     // ── MenuItemEntity ────────────────────────────────────────────────────────
     if (input is MenuItemEntity) {
@@ -96,6 +114,20 @@ class _AppExtraDecoder extends Converter<Object?, Object?> {
     final type = input['__type'] as String?;
 
     switch (type) {
+
+    // ── UserEntity ────────────────────────────────────────────────────────
+      case 'UserEntity':
+        return UserEntity(
+          id: input['id'] as String,
+          phone: input['phone'] as String,
+          name: input['name'] as String?,
+          email: input['email'] as String?,
+          avatarUrl: input['avatarUrl'] as String?,
+          verified: input['verified'] as bool,
+          isProfileComplete: input['isProfileComplete'] as bool,
+          createdAt: DateTime.parse(input['createdAt'] as String),
+        );
+
     // ── MenuItemEntity ────────────────────────────────────────────────────
       case 'MenuItemEntity':
         final variantsList = (input['variants'] as List<dynamic>? ?? [])
@@ -158,6 +190,7 @@ class AppRouter {
     initialLocation: AppRoutes.splash,
     debugLogDiagnostics: true,
     redirect: _authGuard,
+    extraCodec: const _AppExtraCodec(),
     routes: [
       // ── Auth Flow ────────────────────────────────────────
       GoRoute(
@@ -216,8 +249,23 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.home,
         name: 'home',
-        pageBuilder: (ctx, state) =>
-            _buildFadeTransition(state, const HomePage()),
+        pageBuilder: (ctx, state) {
+          final user = state.extra is UserEntity ? state.extra as UserEntity : null;
+          return _buildFadeTransition(state, HomePage(user: user));
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.profile,
+        name: 'profile',
+        pageBuilder: (ctx, state) {
+          final user = state.extra is UserEntity
+              ? state.extra as UserEntity
+              : null;
+          return _buildSlideTransition(
+            state,
+            ProfilePage(user: user),
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.menuItemDetail,
@@ -255,6 +303,18 @@ class AppRouter {
           OrderTrackingPage(
               orderId: state.pathParameters['orderId']!),
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.orderHistory,
+        name: 'order-history',
+        pageBuilder: (ctx, state) =>
+            _buildSlideTransition(state, const OrderHistoryPage()),
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        name: 'notifications',
+        pageBuilder: (ctx, state) =>
+            _buildSlideTransition(state, const NotificationsPage()),
       ),
     ],
     errorBuilder: (ctx, state) => _ErrorPage(error: state.error),
