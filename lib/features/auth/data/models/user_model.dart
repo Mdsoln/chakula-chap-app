@@ -13,10 +13,12 @@ class UserModel {
   final String? email;
   @JsonKey(name: 'avatar_url')
   final String? avatarUrl;
-  @JsonKey(name: 'is_verified')
-  final bool isVerified;
+  @JsonKey(name: 'verified')
+  final bool verified;
+  @JsonKey(name: 'profileComplete')
+  final bool isProfileComplete;
   @JsonKey(name: 'created_at')
-  final DateTime createdAt;
+  final String? createdAt;
 
   const UserModel({
     required this.id,
@@ -24,7 +26,8 @@ class UserModel {
     this.name,
     this.email,
     this.avatarUrl,
-    required this.isVerified,
+    required this.verified,
+    required this.isProfileComplete,
     required this.createdAt,
   });
 
@@ -40,8 +43,9 @@ class UserModel {
     name: name,
     email: email,
     avatarUrl: avatarUrl,
-    isVerified: isVerified,
-    createdAt: createdAt,
+    verified: verified,
+    isProfileComplete: isProfileComplete,
+    createdAt: createdAt != null ? DateTime.parse(createdAt!) : DateTime.now(),
   );
 }
 
@@ -52,14 +56,14 @@ class AuthSessionModel {
   @JsonKey(name: 'refresh_token')
   final String refreshToken;
   final UserModel user;
-  @JsonKey(name: 'expires_at')
-  final DateTime expiresAt;
+  @JsonKey(name: 'expires_in')
+  final int expiresIn;
 
   const AuthSessionModel({
     required this.accessToken,
     required this.refreshToken,
     required this.user,
-    required this.expiresAt,
+    required this.expiresIn,
   });
 
   factory AuthSessionModel.fromJson(Map<String, dynamic> json) =>
@@ -71,6 +75,6 @@ class AuthSessionModel {
     accessToken: accessToken,
     refreshToken: refreshToken,
     user: user.toEntity(),
-    expiresAt: expiresAt,
+    expiresIn: expiresIn,
   );
 }

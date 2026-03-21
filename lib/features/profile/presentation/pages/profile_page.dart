@@ -141,7 +141,7 @@ class _ProfileView extends StatelessWidget {
             style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
           ),
 
-          if (user?.isVerified == true) ...[
+          if (user?.verified == true) ...[
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),

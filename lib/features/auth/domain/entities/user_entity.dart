@@ -6,7 +6,8 @@ class UserEntity extends Equatable {
   final String? name;
   final String? email;
   final String? avatarUrl;
-  final bool isVerified;
+  final bool verified;
+  final bool isProfileComplete;
   final DateTime createdAt;
 
   const UserEntity({
@@ -15,41 +16,49 @@ class UserEntity extends Equatable {
     this.name,
     this.email,
     this.avatarUrl,
-    required this.isVerified,
+    required this.verified,
+    required this.isProfileComplete,
     required this.createdAt,
   });
 
   @override
-  List<Object?> get props => [id, phone, name, email, avatarUrl, isVerified, createdAt];
+  List<Object?> get props => [id, phone];
 }
 
 class AuthSessionEntity extends Equatable {
   final String accessToken;
   final String refreshToken;
   final UserEntity user;
-  final DateTime expiresAt;
+  final int expiresIn;
 
   const AuthSessionEntity({
     required this.accessToken,
     required this.refreshToken,
     required this.user,
-    required this.expiresAt,
+    required this.expiresIn,
   });
 
-  UserEntity copyWith({String? name, String? email, String? avatarUrl}) {
-    return UserEntity(
-      id: user.id,
-      phone: user.phone,
-      name: name ?? user.name,
-      email: email ?? user.email,
-      avatarUrl: avatarUrl ?? user.avatarUrl,
-      isVerified: user.isVerified,
-      createdAt: user.createdAt,
-    );
+  bool get isExpired {
+    final expiryDate = DateTime.fromMillisecondsSinceEpoch(expiresIn * 1000);
+    return DateTime.now().isAfter(expiryDate);
   }
 
-  bool get isExpired => DateTime.now().isAfter(expiresAt);
+  @override
+  List<Object?> get props => [accessToken, user];
+}
+
+/// Returned by sendOtp — carries the server response details for the UI
+class OtpSentEntity extends Equatable {
+  final String phone;
+  final String maskedPhone;
+  final int expiresInSeconds;
+
+  const OtpSentEntity({
+    required this.phone,
+    required this.maskedPhone,
+    required this.expiresInSeconds,
+  });
 
   @override
-  List<Object?> get props => [accessToken, refreshToken, user, expiresAt];
+  List<Object?> get props => [phone, maskedPhone, expiresInSeconds];
 }

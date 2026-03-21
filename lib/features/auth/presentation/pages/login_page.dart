@@ -47,11 +47,14 @@ class _LoginViewState extends State<_LoginView>
       duration: const Duration(milliseconds: 800),
     );
     _fadeAnim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _animController, curve: const Interval(0.0, 0.6, curve: Curves.easeOut)),
+      CurvedAnimation(
+          parent: _animController,
+          curve: const Interval(0.0, 0.6, curve: Curves.easeOut)),
     );
-    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
-    );
+    _slideAnim =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+        );
     _animController.forward();
   }
 
@@ -65,11 +68,8 @@ class _LoginViewState extends State<_LoginView>
   void _onSendOtp() {
     if (!_formKey.currentState!.validate()) return;
     FocusScope.of(context).unfocus();
-    context.read<AuthBloc>().add(
-      SendOtpEvent(
-        phone: '${AppConstants.countryCode}${_phoneController.text.trim()}',
-      ),
-    );
+    final rawPhone = '+255${_phoneController.text.trim()}';
+    context.read<AuthBloc>().add(SendOtpEvent(phone: rawPhone));
   }
 
   @override
@@ -77,7 +77,10 @@ class _LoginViewState extends State<_LoginView>
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is OtpSentState) {
-          context.push(AppRoutes.otp, extra: state.phone);
+          context.push(AppRoutes.otp, extra: {
+            'phone': state.phone,
+            'maskedPhone': state.maskedPhone,
+          });
         }
         if (state is AuthErrorState) {
           showChakulaChapSnackbar(context, message: state.message, isError: true);
@@ -86,11 +89,10 @@ class _LoginViewState extends State<_LoginView>
       child: Scaffold(
         body: Stack(
           children: [
-            // Background gradient
             Container(
-              decoration: const BoxDecoration(gradient: AppColors.heroGradient),
+              decoration:
+              const BoxDecoration(gradient: AppColors.heroGradient),
             ),
-            // Gold glow
             Positioned(
               top: -80,
               right: -60,
@@ -141,7 +143,6 @@ class _LoginViewState extends State<_LoginView>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ChakulaChap logo mark
         Container(
           width: 52,
           height: 52,
@@ -150,7 +151,12 @@ class _LoginViewState extends State<_LoginView>
             borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
           ),
           child: const Center(
-            child: Text('C', style: TextStyle(fontFamily: 'Poppins', fontSize: 28, fontWeight: FontWeight.w800, color: AppColors.navyDeep)),
+            child: Text('C',
+                style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.navyDeep)),
           ),
         ),
         const SizedBox(height: AppDimensions.spaceLg),
@@ -158,7 +164,8 @@ class _LoginViewState extends State<_LoginView>
         const SizedBox(height: AppDimensions.spaceSm),
         Text(
           'Sign in with your phone number to\ncontinue ordering.',
-          style: AppTextStyles.bodyLarge.copyWith(color: AppColors.textSecondary),
+          style: AppTextStyles.bodyLarge
+              .copyWith(color: AppColors.textSecondary),
         ),
       ],
     );
@@ -180,7 +187,6 @@ class _LoginViewState extends State<_LoginView>
           const SizedBox(height: AppDimensions.spaceSm),
           Row(
             children: [
-              // Country code badge
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppDimensions.spaceMd,
@@ -188,8 +194,10 @@ class _LoginViewState extends State<_LoginView>
                 ),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceCard,
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                  border: Border.all(color: AppColors.navyAccent, width: 0.8),
+                  borderRadius:
+                  BorderRadius.circular(AppDimensions.radiusMd),
+                  border: Border.all(
+                      color: AppColors.navyAccent, width: 0.8),
                 ),
                 child: const Row(
                   children: [
@@ -200,7 +208,6 @@ class _LoginViewState extends State<_LoginView>
                 ),
               ),
               const SizedBox(width: AppDimensions.spaceSm),
-              // Phone number input
               Expanded(
                 child: TextFormField(
                   controller: _phoneController,
@@ -209,14 +216,21 @@ class _LoginViewState extends State<_LoginView>
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(9),
                   ],
-                  style: AppTextStyles.h3.copyWith(letterSpacing: 2),
+                  style:
+                  AppTextStyles.h3.copyWith(letterSpacing: 2),
                   decoration: const InputDecoration(
                     hintText: '7XX XXX XXX',
-                    hintStyle: TextStyle(letterSpacing: 2, color: AppColors.textDisabled),
+                    hintStyle: TextStyle(
+                        letterSpacing: 2,
+                        color: AppColors.textDisabled),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Enter your phone number';
-                    if (value.length < 9) return 'Enter a valid 9-digit number';
+                    if (value == null || value.isEmpty) {
+                      return 'Enter your phone number';
+                    }
+                    if (value.length < 9) {
+                      return 'Enter a valid 9-digit number';
+                    }
                     return null;
                   },
                 ),
@@ -235,7 +249,8 @@ class _LoginViewState extends State<_LoginView>
           label: 'Send OTP Code',
           isLoading: state is AuthLoadingState,
           onPressed: _onSendOtp,
-          suffixIcon: const Icon(Icons.arrow_forward_rounded, size: 20, color: AppColors.navyDeep),
+          suffixIcon: const Icon(Icons.arrow_forward_rounded,
+              size: 20, color: AppColors.navyDeep),
         );
       },
     );
@@ -246,8 +261,10 @@ class _LoginViewState extends State<_LoginView>
       children: [
         Expanded(child: Divider()),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppDimensions.spaceMd),
-          child: Text('or continue with', style: AppTextStyles.bodySmall),
+          padding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.spaceMd),
+          child:
+          Text('or continue with', style: AppTextStyles.bodySmall),
         ),
         Expanded(child: Divider()),
       ],
@@ -259,18 +276,12 @@ class _LoginViewState extends State<_LoginView>
       children: [
         Expanded(
           child: _SocialButton(
-            label: 'Google',
-            icon: '🔵',
-            onTap: () {},
-          ),
+              label: 'Google', icon: '🔵', onTap: () {}),
         ),
         const SizedBox(width: AppDimensions.spaceSm),
         Expanded(
           child: _SocialButton(
-            label: 'Facebook',
-            icon: '📘',
-            onTap: () {},
-          ),
+              label: 'Facebook', icon: '📘', onTap: () {}),
         ),
       ],
     );
@@ -284,12 +295,14 @@ class _LoginViewState extends State<_LoginView>
         children: [
           TextSpan(
             text: 'Terms of Service',
-            style: AppTextStyles.bodySmall.copyWith(color: AppColors.goldBright),
+            style: AppTextStyles.bodySmall
+                .copyWith(color: AppColors.goldBright),
           ),
           const TextSpan(text: ' and '),
           TextSpan(
             text: 'Privacy Policy',
-            style: AppTextStyles.bodySmall.copyWith(color: AppColors.goldBright),
+            style: AppTextStyles.bodySmall
+                .copyWith(color: AppColors.goldBright),
           ),
         ],
       ),
@@ -303,7 +316,8 @@ class _SocialButton extends StatelessWidget {
   final String icon;
   final VoidCallback onTap;
 
-  const _SocialButton({required this.label, required this.icon, required this.onTap});
+  const _SocialButton(
+      {required this.label, required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -311,11 +325,14 @@ class _SocialButton extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: AppDimensions.spaceMd),
+        padding: const EdgeInsets.symmetric(
+            vertical: AppDimensions.spaceMd),
         decoration: BoxDecoration(
           color: AppColors.surfaceCard,
-          borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-          border: Border.all(color: AppColors.navyAccent, width: 0.8),
+          borderRadius:
+          BorderRadius.circular(AppDimensions.radiusMd),
+          border: Border.all(
+              color: AppColors.navyAccent, width: 0.8),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

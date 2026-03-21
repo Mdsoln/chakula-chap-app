@@ -17,9 +17,10 @@ abstract class RegistrationEvent extends Equatable {
 }
 
 class SubmitRegistrationEvent extends RegistrationEvent {
+  final String phone;
   final String fullName;
   final String? email;
-  const SubmitRegistrationEvent({required this.fullName, this.email});
+  const SubmitRegistrationEvent({required this.phone, required this.fullName, this.email});
   @override
   List<Object?> get props => [fullName, email];
 }
@@ -78,7 +79,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       ) async {
     emit(RegistrationLoadingState());
     final result = await _completeProfile(
-      CompleteProfileParams(fullName: event.fullName, email: event.email),
+      CompleteProfileParams(phone: event.phone, fullName: event.fullName, email: event.email),
     );
     result.fold(
           (failure) => emit(RegistrationErrorState(message: failure.message)),

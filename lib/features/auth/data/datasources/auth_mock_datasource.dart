@@ -21,7 +21,7 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   };
 
   @override
-  Future<bool> sendOtp(String phone) async {
+  Future<OtpSentModel> sendOtp(String phone) async {
     await Future.delayed(_networkDelay);
 
     // Simulate a blocked test number
@@ -43,13 +43,14 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
       );
     }
 
-    return true;
+    return OtpSentModel(phone: phone, expiresInSeconds: 10, maskedPhone: phone);
   }
 
   @override
   Future<AuthSessionModel> verifyOtp({
     required String phone,
     required String otp,
+    String? deviceInfo,
   }) async {
     await Future.delayed(_networkDelay);
 
@@ -74,6 +75,7 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> completeProfile({
+    required String phone,
     required String fullName,
     String? email,
   }) async {
@@ -98,8 +100,9 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
       name: updated.name!,
       email: updated.email,
       avatarUrl: null,
-      isVerified: true,
-      createdAt: DateTime.now(),
+      verified: true,
+      isProfileComplete: true,
+      createdAt: "2026-03-21",
     );
   }
 
@@ -121,18 +124,21 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   // ── Helpers ────────────────────────────────────────────────────────────────
 
   AuthSessionModel _buildSession(_RegisteredUser user) {
+    const int sessionDurationSeconds = 86400;
     return AuthSessionModel(
+
       accessToken: 'mock-access-${user.id}-${DateTime.now().millisecondsSinceEpoch}',
       refreshToken: 'mock-refresh-${user.id}',
-      expiresAt: DateTime.now().add(const Duration(hours: 24)),
+      expiresIn: sessionDurationSeconds,
       user: UserModel(
         id: user.id,
         phone: user.phone,
         name: user.name,
         email: user.email,
         avatarUrl: null,
-        isVerified: true,
-        createdAt: DateTime.now(),
+        verified: true,
+        isProfileComplete: true,
+        createdAt: "2026-03-21",
       ),
     );
   }

@@ -16,20 +16,23 @@ import '../block/auth_bloc.dart';
 
 class OtpPage extends StatelessWidget {
   final String phone;
-  const OtpPage({super.key, required this.phone});
+  final String maskedPhone;
+
+  const OtpPage({super.key, required this.phone, required this.maskedPhone});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => getIt<AuthBloc>(),
-      child: _OtpView(phone: phone),
+      child: _OtpView(phone: phone, maskedPhone: maskedPhone),
     );
   }
 }
 
 class _OtpView extends StatefulWidget {
   final String phone;
-  const _OtpView({required this.phone});
+  final String maskedPhone;
+  const _OtpView({required this.phone, required this.maskedPhone});
 
   @override
   State<_OtpView> createState() => _OtpViewState();
@@ -83,13 +86,6 @@ class _OtpViewState extends State<_OtpView> {
     context.read<AuthBloc>().add(ResendOtpEvent(phone: widget.phone));
   }
 
-  String get _maskedPhone {
-    // Show +255 7XX ***XXX
-    final digits = widget.phone.replaceAll('+255', '').replaceAll(' ', '');
-    if (digits.length < 9) return widget.phone;
-    return '+255 ${digits.substring(0, 3)} ***${digits.substring(6)}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -99,16 +95,34 @@ class _OtpViewState extends State<_OtpView> {
         } else {
           setState(() => _isVerifying = false);
         }
+
         if (state is AuthenticatedState) {
-          if (state.user.name == null || state.user.name!.isEmpty) {
-            context.go(AppRoutes.registration, extra: state.user.phone);
-          } else {
+          if (state.user.isProfileComplete) {
             context.go(AppRoutes.home, extra: state.user);
+          } else {
+            context.go(AppRoutes.registration, extra: state.user);
           }
         }
+
         if (state is AuthErrorState) {
           _pinController.clear();
           showChakulaChapSnackbar(context, message: state.message, isError: true);
+        }
+
+        if (state is OtpSentState) {
+          _timer.cancel();
+          setState(() {
+            _secondsRemaining = state.otpTimerSeconds.clamp(0, 600);
+            _canResend = false;
+          });
+          _timer = Timer.periodic(const Duration(seconds: 1), (t) {
+            if (_secondsRemaining <= 0) {
+              t.cancel();
+              if (mounted) setState(() => _canResend = true);
+            } else {
+              if (mounted) setState(() => _secondsRemaining--);
+            }
+          });
         }
       },
       child: Scaffold(
@@ -124,8 +138,6 @@ class _OtpViewState extends State<_OtpView> {
                     const SizedBox(height: AppDimensions.spaceMd),
                     _buildBackButton(context),
                     const SizedBox(height: AppDimensions.spaceLg),
-                    //_buildIllustration(),
-                    const SizedBox(height: AppDimensions.spaceLg),
                     _buildHeader(),
                     const SizedBox(height: AppDimensions.spaceXl),
                     _buildPinInput(),
@@ -137,7 +149,6 @@ class _OtpViewState extends State<_OtpView> {
                 ),
               ),
             ),
-            // Success overlay
             if (_isVerifying) _buildVerifyingOverlay(),
           ],
         ),
@@ -161,22 +172,11 @@ class _OtpViewState extends State<_OtpView> {
     );
   }
 
-  // Widget _buildIllustration() {
-  //   return Center(
-  //     child: Lottie.asset(
-  //       AppConstants.lottiePayment,
-  //       width: 160,
-  //       height: 160,
-  //       fit: BoxFit.contain,
-  //     ),
-  //   );
-  // }
-
   Widget _buildHeader() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Verify your number', style: AppTextStyles.displayMedium),
+        const Text('Verify your number', style: AppTextStyles.displaySmall),
         const SizedBox(height: AppDimensions.spaceSm),
         Text.rich(
           TextSpan(
@@ -184,7 +184,7 @@ class _OtpViewState extends State<_OtpView> {
             style: AppTextStyles.bodyMedium,
             children: [
               TextSpan(
-                text: _maskedPhone,
+                text: '+${widget.maskedPhone}',
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.goldBright,
                   fontWeight: FontWeight.w700,

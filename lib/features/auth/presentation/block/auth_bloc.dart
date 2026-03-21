@@ -57,26 +57,29 @@ abstract class AuthState extends Equatable {
 }
 
 class AuthInitialState extends AuthState {}
-
 class AuthLoadingState extends AuthState {}
 
-// OTP sent — show OTP input screen
 class OtpSentState extends AuthState {
   final String phone;
+  final String maskedPhone;
   final int otpTimerSeconds;
 
-  const OtpSentState({required this.phone, required this.otpTimerSeconds});
+  const OtpSentState({
+    required this.phone,
+    required this.maskedPhone,
+    required this.otpTimerSeconds,
+  });
 
   OtpSentState copyWith({int? otpTimerSeconds}) => OtpSentState(
     phone: phone,
+    maskedPhone: maskedPhone,
     otpTimerSeconds: otpTimerSeconds ?? this.otpTimerSeconds,
   );
 
   @override
-  List<Object?> get props => [phone, otpTimerSeconds];
+  List<Object?> get props => [phone, maskedPhone, otpTimerSeconds];
 }
 
-// Authenticated — user logged in
 class AuthenticatedState extends AuthState {
   final UserEntity user;
   const AuthenticatedState({required this.user});
@@ -84,7 +87,6 @@ class AuthenticatedState extends AuthState {
   List<Object?> get props => [user];
 }
 
-// Unauthenticated — not logged in
 class UnauthenticatedState extends AuthState {}
 
 class AuthErrorState extends AuthState {
@@ -95,7 +97,6 @@ class AuthErrorState extends AuthState {
 }
 
 // ── BLoC ──────────────────────────────────────────────────────────────────────
-
 @injectable
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SendOtpUseCase _sendOtp;
@@ -112,29 +113,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onSendOtp(
-      SendOtpEvent event,
-      Emitter<AuthState> emit,
-      ) async {
+      SendOtpEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
-
     final result = await _sendOtp(SendOtpParams(phone: event.phone));
-
     result.fold(
           (failure) => emit(AuthErrorState(message: failure.message)),
-          (_) => emit(OtpSentState(phone: event.phone, otpTimerSeconds: 60)),
+          (otpSent) => emit(OtpSentState(
+        phone: otpSent.phone,
+        maskedPhone: otpSent.maskedPhone,
+        otpTimerSeconds: otpSent.expiresInSeconds.clamp(0, 600),
+      )),
     );
   }
 
   Future<void> _onVerifyOtp(
-      VerifyOtpEvent event,
-      Emitter<AuthState> emit,
-      ) async {
+      VerifyOtpEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
-
     final result = await _verifyOtp(
       VerifyOtpParams(phone: event.phone, otp: event.otp),
     );
-
     result.fold(
           (failure) => emit(AuthErrorState(message: failure.message)),
           (session) => emit(AuthenticatedState(user: session.user)),
@@ -142,9 +139,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onLogout(
-      LogoutEvent event,
-      Emitter<AuthState> emit,
-      ) async {
+      LogoutEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
     await _logout();
     emit(UnauthenticatedState());
@@ -152,20 +147,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _onTimerTick(OtpTimerTickEvent event, Emitter<AuthState> emit) {
     if (state is OtpSentState) {
-      emit((state as OtpSentState).copyWith(
-        otpTimerSeconds: event.secondsRemaining,
-      ));
+      emit((state as OtpSentState)
+          .copyWith(otpTimerSeconds: event.secondsRemaining));
     }
   }
 
   Future<void> _onResendOtp(
-      ResendOtpEvent event,
-      Emitter<AuthState> emit,
-      ) async {
+      ResendOtpEvent event, Emitter<AuthState> emit) async {
     final result = await _sendOtp(SendOtpParams(phone: event.phone));
     result.fold(
           (failure) => emit(AuthErrorState(message: failure.message)),
-          (_) => emit(OtpSentState(phone: event.phone, otpTimerSeconds: 60)),
+          (otpSent) => emit(OtpSentState(
+        phone: otpSent.phone,
+        maskedPhone: otpSent.maskedPhone,
+        otpTimerSeconds: otpSent.expiresInSeconds.clamp(0, 600),
+      )),
     );
   }
 }

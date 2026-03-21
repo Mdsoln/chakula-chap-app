@@ -19,10 +19,14 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._remote, this._local);
 
   @override
-  Future<Either<Failure, bool>> sendOtp(String phone) async {
+  Future<Either<Failure, OtpSentEntity>> sendOtp(String phone) async {
     try {
-      final result = await _remote.sendOtp(phone);
-      return Right(result);
+      final model = await _remote.sendOtp(phone);
+      return Right(OtpSentEntity(
+        phone: model.phone,
+        maskedPhone: model.maskedPhone,
+        expiresInSeconds: model.expiresInSeconds,
+      ));
     } on NetworkException {
       return const Left(NetworkFailure());
     } on TimeoutException {
@@ -43,7 +47,6 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     try {
       final session = await _remote.verifyOtp(phone: phone, otp: otp);
-      // Cache session locally after successful verification
       await _local.cacheSession(session);
       return Right(session.toEntity());
     } on NetworkException {
@@ -51,6 +54,9 @@ class AuthRepositoryImpl implements AuthRepository {
     } on UnauthorizedException catch (e) {
       return Left(OtpFailure(message: e.message));
     } on ServerException catch (e) {
+      if (e.statusCode == null) {
+        return Left(OtpFailure(message: e.message));
+      }
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on StorageException catch (e) {
       return Left(StorageFailure(message: e.message));
@@ -94,7 +100,6 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, bool>> logout() async {
     try {
-      // Best-effort remote logout — clear locally regardless
       await _remote.logout().catchError((_) => false);
       await _local.clearSession();
       return const Right(true);
@@ -108,15 +113,17 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, UserEntity>> completeProfile({
+    required String phone,
     required String fullName,
     String? email,
   }) async {
     try {
       final userModel = await _remote.completeProfile(
+        phone: phone,
         fullName: fullName,
         email: email,
       );
-      await _local.cacheUser(userModel);
+      await _local.cacheUpdatedUser(userModel);
       return Right(userModel.toEntity());
     } on NetworkException {
       return const Left(NetworkFailure());

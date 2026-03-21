@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chakula_chap/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -12,11 +13,8 @@ import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/menu/domain/entities/menu_item_entity.dart';
 import '../../features/menu/presentation/pages/menu_item_detail_page.dart';
-import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/order_tracking/presentation/pages/order_confirm_page.dart';
-import '../../features/order_tracking/presentation/pages/order_history_page.dart';
 import '../../features/order_tracking/presentation/pages/order_tracking_page.dart';
-import '../../features/profile/presentation/pages/profile_page.dart';
 import '../constants/app_constants.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
@@ -152,100 +150,94 @@ class _AppExtraDecoder extends Converter<Object?, Object?> {
 @singleton
 class AppRouter {
   final FlutterSecureStorage _storage;
+  final AuthRepository _authRepo;
 
-  AppRouter(this._storage);
+  AppRouter(this._storage, this._authRepo);
 
   late final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
     debugLogDiagnostics: true,
-    extraCodec: const _AppExtraCodec(),
     redirect: _authGuard,
     routes: [
       // ── Auth Flow ────────────────────────────────────────
       GoRoute(
         path: AppRoutes.splash,
         name: 'splash',
-        pageBuilder: (ctx, state) => _buildFadeTransition(
-          state,
-          const SplashPage(),
-        ),
+        pageBuilder: (ctx, state) =>
+            _buildFadeTransition(state, const SplashPage()),
       ),
       GoRoute(
         path: AppRoutes.onboarding,
         name: 'onboarding',
-        pageBuilder: (ctx, state) => _buildSlideTransition(
-          state,
-          const OnboardingPage(),
-        ),
+        pageBuilder: (ctx, state) =>
+            _buildSlideTransition(state, const OnboardingPage()),
       ),
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
-        pageBuilder: (ctx, state) => _buildSlideTransition(
-          state,
-          const LoginPage(),
-        ),
+        pageBuilder: (ctx, state) =>
+            _buildSlideTransition(state, const LoginPage()),
       ),
       GoRoute(
         path: AppRoutes.otp,
         name: 'otp',
-        pageBuilder: (ctx, state) => _buildSlideTransition(
-          state,
-          OtpPage(phone: state.extra as String),
-        ),
+        pageBuilder: (ctx, state) {
+          final extra = state.extra as Map<String, String>;
+          return _buildSlideTransition(
+            state,
+            OtpPage(
+              phone: extra['phone']!,
+              maskedPhone: extra['maskedPhone']!,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.registration,
         name: 'registration',
-        pageBuilder: (ctx, state) => _buildSlideTransition(
-          state,
-          RegistrationPage(phone: state.extra as String),
-        ),
+        pageBuilder: (ctx, state) {
+          String phone = '';
+          if (state.extra is UserEntity) {
+            phone = (state.extra as UserEntity).phone;
+          } else {
+            phone = Uri.decodeComponent(
+              state.uri.queryParameters['phone'] ?? '',
+            );
+          }
+
+          return _buildSlideTransition(
+            state,
+            RegistrationPage(phone: phone),
+          );
+        },
       ),
 
       // ── Main App (Protected) ─────────────────────────────
       GoRoute(
         path: AppRoutes.home,
         name: 'home',
-        pageBuilder: (ctx, state) => _buildFadeTransition(
-          state,
-          HomePage(user: state.extra as UserEntity?),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.profile,
-        name: 'profile',
-        pageBuilder: (ctx, state) => _buildSlideTransition(
-          state,
-          ProfilePage(user: state.extra as UserEntity?),
-        ),
+        pageBuilder: (ctx, state) =>
+            _buildFadeTransition(state, const HomePage()),
       ),
       GoRoute(
         path: AppRoutes.menuItemDetail,
         name: 'menu-item-detail',
         pageBuilder: (ctx, state) => _buildSlideTransition(
           state,
-          MenuItemDetailPage(
-            itemId: state.pathParameters['id']!,
-            item: state.extra as MenuItemEntity?,
-          ),
+          MenuItemDetailPage(itemId: state.pathParameters['id']!),
         ),
       ),
       GoRoute(
         path: AppRoutes.cart,
         name: 'cart',
-        pageBuilder: (ctx, state) => _buildSlideTransition(
-          state,
-          const CartPage(),
-        ),
+        pageBuilder: (ctx, state) =>
+            _buildSlideTransition(state, const CartPage()),
       ),
       GoRoute(
         path: AppRoutes.checkout,
         name: 'checkout',
-        pageBuilder: (ctx, state) => _buildSlideTransition(
-          state,
-          const CheckoutPage(),
-        ),
+        pageBuilder: (ctx, state) =>
+            _buildSlideTransition(state, const CheckoutPage()),
       ),
       GoRoute(
         path: AppRoutes.orderConfirm,
@@ -260,23 +252,8 @@ class AppRouter {
         name: 'order-tracking',
         pageBuilder: (ctx, state) => _buildSlideTransition(
           state,
-          OrderTrackingPage(orderId: state.pathParameters['orderId']!),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.notifications,
-        name: 'notifications',
-        pageBuilder: (ctx, state) => _buildSlideTransition(
-          state,
-          const NotificationsPage(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.orderHistory,
-        name: 'order-history',
-        pageBuilder: (ctx, state) => _buildSlideTransition(
-          state,
-          const OrderHistoryPage(),
+          OrderTrackingPage(
+              orderId: state.pathParameters['orderId']!),
         ),
       ),
     ],
@@ -284,61 +261,69 @@ class AppRouter {
   );
 
   // ── Auth Guard ────────────────────────────────────────────
-  Future<String?> _authGuard(BuildContext context, GoRouterState state) async {
-    final token = await _storage.read(key: AppConstants.kAccessToken);
+  Future<String?> _authGuard(
+      BuildContext context, GoRouterState state) async {
+    final token =
+    await _storage.read(key: AppConstants.kAccessToken);
     final isAuthenticated = token != null;
 
-    final publicRoutes = {
+    const publicRoutes = {
       AppRoutes.splash,
       AppRoutes.onboarding,
       AppRoutes.login,
       AppRoutes.otp,
     };
 
-    final isPublicRoute = publicRoutes.contains(state.matchedLocation);
+    final isPublicRoute =
+    publicRoutes.contains(state.matchedLocation);
 
     if (!isAuthenticated && !isPublicRoute) return AppRoutes.login;
-    if (isAuthenticated && state.matchedLocation == AppRoutes.login) {
+    if (isAuthenticated &&
+        state.matchedLocation == AppRoutes.login) {
       return AppRoutes.home;
+    }
+
+    if (isAuthenticated && state.matchedLocation != AppRoutes.registration) {
+      final userResult = await _authRepo.getCurrentUser();
+      final user = userResult.fold((_) => null, (u) => u);
+      if (user != null && !user.isProfileComplete) {
+        return '${AppRoutes.registration}?phone=${Uri.encodeComponent(user.phone)}';
+      }
     }
     return null;
   }
 
   // ── Page transitions ──────────────────────────────────────
   static CustomTransitionPage<void> _buildFadeTransition(
-      GoRouterState state,
-      Widget child,
-      ) {
+      GoRouterState state, Widget child) {
     return CustomTransitionPage<void>(
       key: state.pageKey,
       child: child,
       transitionDuration: AppConstants.animMedium,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      transitionsBuilder: (context, animation, secondary, child) {
         return FadeTransition(opacity: animation, child: child);
       },
     );
   }
 
   static CustomTransitionPage<void> _buildSlideTransition(
-      GoRouterState state,
-      Widget child,
-      ) {
+      GoRouterState state, Widget child) {
     return CustomTransitionPage<void>(
       key: state.pageKey,
       child: child,
       transitionDuration: AppConstants.animMedium,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      transitionsBuilder: (context, animation, secondary, child) {
         final tween = Tween(
           begin: const Offset(1.0, 0.0),
           end: Offset.zero,
         ).chain(CurveTween(curve: Curves.easeOutCubic));
-        return SlideTransition(position: animation.drive(tween), child: child);
+        return SlideTransition(
+            position: animation.drive(tween), child: child);
       },
     );
   }
 }
 
-/// Fallback error page for unmatched routes
 class _ErrorPage extends StatelessWidget {
   final Exception? error;
   const _ErrorPage({this.error});
@@ -350,7 +335,8 @@ class _ErrorPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('404 - Page not found', style: TextStyle(fontSize: 18)),
+            const Text('404 - Page not found',
+                style: TextStyle(fontSize: 18)),
             const SizedBox(height: 16),
             TextButton(
               onPressed: () => context.go(AppRoutes.home),

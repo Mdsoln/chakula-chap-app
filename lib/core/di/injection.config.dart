@@ -21,16 +21,21 @@ import '../../features/auth/data/datasources/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../features/auth/domain/usecases/complete_profile_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/send_otp_usecase.dart';
 import '../../features/auth/domain/usecases/verify_otp_usecase.dart';
 import '../../features/auth/presentation/block/auth_bloc.dart';
+import '../../features/auth/presentation/block/registration_bloc.dart';
 import '../../features/cart/data/datasources/cart_local_datasource.dart';
 import '../../features/cart/data/repositories/cart_repository_impl.dart';
 import '../../features/cart/domain/repositories/cart_repository.dart';
 import '../../features/cart/domain/usecases/cart_usecases.dart';
 import '../../features/cart/presentation/bloc/cart_bloc.dart';
 import '../../features/checkout/presentation/bloc/checkout_bloc.dart';
+import '../../features/location/data/repositories/location_repository_impl.dart';
+import '../../features/location/domain/repositories/location_repository.dart';
+import '../../features/location/domain/usecases/get_current_location_usecase.dart';
 import '../../features/menu/data/datasources/menu_local_datasource.dart';
 import '../../features/menu/data/datasources/menu_remote_datasource.dart';
 import '../../features/menu/data/repositories/menu_repository_impl.dart';
@@ -84,8 +89,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<NetworkClient>(
           () => NetworkClient(gh<AuthInterceptor>(), gh<ConnectivityChecker>()),
     );
-    gh.singleton<AppRouter>(
-          () => AppRouter(gh<FlutterSecureStorage>()),
+
+    // ── Location ──────────────────────────────────────────────────────────────
+    gh.factory<LocationRepository>(
+          () => LocationRepositoryImpl(),
+    );
+    gh.factory<GetCurrentLocationUseCase>(
+          () => GetCurrentLocationUseCase(gh<LocationRepository>()),
     );
 
     // ── Auth ──────────────────────────────────────────────────────────────────
@@ -107,11 +117,26 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<SendOtpUseCase>(() => SendOtpUseCase(gh<AuthRepository>()));
     gh.factory<VerifyOtpUseCase>(() => VerifyOtpUseCase(gh<AuthRepository>()));
     gh.factory<LogoutUseCase>(() => LogoutUseCase(gh<AuthRepository>()));
+    gh.factory<CompleteProfileUseCase>(
+          () => CompleteProfileUseCase(gh<AuthRepository>()),
+    );
     gh.factory<AuthBloc>(
           () => AuthBloc(
         gh<SendOtpUseCase>(),
         gh<VerifyOtpUseCase>(),
         gh<LogoutUseCase>(),
+      ),
+    );
+    gh.factory<RegistrationBloc>(
+          () => RegistrationBloc(
+        gh<CompleteProfileUseCase>(),
+        gh<GetCurrentLocationUseCase>(),
+      ),
+    );
+    gh.singleton<AppRouter>(
+          () => AppRouter(
+        gh<FlutterSecureStorage>(),
+        gh<AuthRepository>(),
       ),
     );
 
@@ -167,7 +192,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<UpdateCartItemQuantityUseCase>(
           () => UpdateCartItemQuantityUseCase(gh<CartRepository>()),
     );
-    gh.factory<ClearCartUseCase>(() => ClearCartUseCase(gh<CartRepository>()));
+    gh.factory<ClearCartUseCase>(
+          () => ClearCartUseCase(gh<CartRepository>()),
+    );
     gh.factory<CartBloc>(
           () => CartBloc(
         gh<GetCartUseCase>(),
@@ -178,12 +205,10 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
 
-    // ── Order Tracking WebSocket ───────────────────────────────────────────────
+    // ── Order Tracking ────────────────────────────────────────────────────────
     gh.factory<OrderTrackingDataSource>(
           () => OrderTrackingDataSourceImpl(),
     );
-
-    // ── Checkout / Order ──────────────────────────────────────────────────────
     gh.factory<OrderRemoteDataSource>(
           () => OrderRemoteDataSourceImpl(gh<NetworkClient>()),
     );

@@ -26,7 +26,7 @@ import 'injection.config.dart';
 final getIt = GetIt.instance;
 
 /// ── THE ONE SWITCH ────────────────────────────────────────────────────────────
-const bool kUseMock = true;
+const bool kUseMock = false;
 /// ─────────────────────────────────────────────────────────────────────────────
 
 @InjectableInit(
