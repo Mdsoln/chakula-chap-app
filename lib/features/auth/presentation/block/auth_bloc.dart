@@ -57,7 +57,6 @@ abstract class AuthState extends Equatable {
 }
 
 class AuthInitialState extends AuthState {}
-
 class AuthLoadingState extends AuthState {}
 
 class OtpSentState extends AuthState {
@@ -113,11 +112,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ResendOtpEvent>(_onResendOtp);
   }
 
-  Future<void> _onSendOtp(SendOtpEvent event, Emitter<AuthState> emit) async {
+  Future<void> _onSendOtp(
+      SendOtpEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
-
     final result = await _sendOtp(SendOtpParams(phone: event.phone));
-
     result.fold(
           (failure) => emit(AuthErrorState(message: failure.message)),
           (otpSent) => emit(OtpSentState(
@@ -128,20 +126,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _onVerifyOtp(VerifyOtpEvent event, Emitter<AuthState> emit) async {
+  Future<void> _onVerifyOtp(
+      VerifyOtpEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
-
     final result = await _verifyOtp(
       VerifyOtpParams(phone: event.phone, otp: event.otp),
     );
-
     result.fold(
           (failure) => emit(AuthErrorState(message: failure.message)),
           (session) => emit(AuthenticatedState(user: session.user)),
     );
   }
 
-  Future<void> _onLogout(LogoutEvent event, Emitter<AuthState> emit) async {
+  Future<void> _onLogout(
+      LogoutEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
     await _logout();
     emit(UnauthenticatedState());
@@ -149,11 +147,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _onTimerTick(OtpTimerTickEvent event, Emitter<AuthState> emit) {
     if (state is OtpSentState) {
-      emit((state as OtpSentState).copyWith(otpTimerSeconds: event.secondsRemaining));
+      emit((state as OtpSentState)
+          .copyWith(otpTimerSeconds: event.secondsRemaining));
     }
   }
 
-  Future<void> _onResendOtp(ResendOtpEvent event, Emitter<AuthState> emit) async {
+  Future<void> _onResendOtp(
+      ResendOtpEvent event, Emitter<AuthState> emit) async {
     final result = await _sendOtp(SendOtpParams(phone: event.phone));
     result.fold(
           (failure) => emit(AuthErrorState(message: failure.message)),

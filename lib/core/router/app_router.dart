@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chakula_chap/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -12,11 +13,8 @@ import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/menu/domain/entities/menu_item_entity.dart';
 import '../../features/menu/presentation/pages/menu_item_detail_page.dart';
-import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/order_tracking/presentation/pages/order_confirm_page.dart';
-import '../../features/order_tracking/presentation/pages/order_history_page.dart';
 import '../../features/order_tracking/presentation/pages/order_tracking_page.dart';
-import '../../features/profile/presentation/pages/profile_page.dart';
 import '../constants/app_constants.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
@@ -152,8 +150,9 @@ class _AppExtraDecoder extends Converter<Object?, Object?> {
 @singleton
 class AppRouter {
   final FlutterSecureStorage _storage;
+  final AuthRepository _authRepo;
 
-  AppRouter(this._storage);
+  AppRouter(this._storage, this._authRepo);
 
   late final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
@@ -183,7 +182,6 @@ class AppRouter {
         path: AppRoutes.otp,
         name: 'otp',
         pageBuilder: (ctx, state) {
-          // Extra is a Map<String, String> with 'phone' and 'maskedPhone'
           final extra = state.extra as Map<String, String>;
           return _buildSlideTransition(
             state,
@@ -191,6 +189,17 @@ class AppRouter {
               phone: extra['phone']!,
               maskedPhone: extra['maskedPhone']!,
             ),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.registration,
+        name: 'registration',
+        pageBuilder: (ctx, state) {
+          final user = state.extra as UserEntity;
+          return _buildSlideTransition(
+            state,
+            RegistrationPage(phone: user.phone),
           );
         },
       ),
@@ -264,6 +273,14 @@ class AppRouter {
     if (isAuthenticated &&
         state.matchedLocation == AppRoutes.login) {
       return AppRoutes.home;
+    }
+
+    if (isAuthenticated && state.matchedLocation != AppRoutes.registration) {
+      final userResult = await _authRepo.getCurrentUser();
+      final user = userResult.fold((_) => null, (u) => u);
+      if (user != null && !user.isProfileComplete) {
+        return AppRoutes.registration;
+      }
     }
     return null;
   }

@@ -15,8 +15,10 @@ class UserModel {
   final String? avatarUrl;
   @JsonKey(name: 'verified')
   final bool verified;
+  @JsonKey(name: 'profileComplete')
+  final bool isProfileComplete;
   @JsonKey(name: 'created_at')
-  final DateTime createdAt;
+  final String? createdAt;
 
   const UserModel({
     required this.id,
@@ -25,6 +27,7 @@ class UserModel {
     this.email,
     this.avatarUrl,
     required this.verified,
+    required this.isProfileComplete,
     required this.createdAt,
   });
 
@@ -41,7 +44,8 @@ class UserModel {
     email: email,
     avatarUrl: avatarUrl,
     verified: verified,
-    createdAt: createdAt,
+    isProfileComplete: isProfileComplete,
+    createdAt: createdAt != null ? DateTime.parse(createdAt!) : DateTime.now(),
   );
 }
 

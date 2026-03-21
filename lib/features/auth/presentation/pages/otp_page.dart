@@ -95,13 +95,20 @@ class _OtpViewState extends State<_OtpView> {
         } else {
           setState(() => _isVerifying = false);
         }
+
         if (state is AuthenticatedState) {
-          context.go(AppRoutes.home);
+          if (state.user.isProfileComplete) {
+            context.go(AppRoutes.home, extra: state.user);
+          } else {
+            context.go(AppRoutes.registration, extra: state.user);
+          }
         }
+
         if (state is AuthErrorState) {
           _pinController.clear();
           showChakulaChapSnackbar(context, message: state.message, isError: true);
         }
+
         if (state is OtpSentState) {
           _timer.cancel();
           setState(() {

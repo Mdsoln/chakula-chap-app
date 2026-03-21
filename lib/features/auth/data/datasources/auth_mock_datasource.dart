@@ -100,7 +100,8 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
       email: updated.email,
       avatarUrl: null,
       verified: true,
-      createdAt: DateTime.now(),
+      isProfileComplete: true,
+      createdAt: "2026-03-21",
     );
   }
 
@@ -135,7 +136,8 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
         email: user.email,
         avatarUrl: null,
         verified: true,
-        createdAt: DateTime.now(),
+        isProfileComplete: true,
+        createdAt: "2026-03-21",
       ),
     );
   }

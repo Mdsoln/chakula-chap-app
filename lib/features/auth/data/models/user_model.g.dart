@@ -56,7 +56,8 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
   email: json['email'] as String?,
   avatarUrl: json['avatarUrl'] as String?,
   verified: json['verified'] as bool,
-  createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']!) : DateTime.now(),
+  isProfileComplete: json['profileComplete'] as bool? ?? false,
+  createdAt: json['createdAt'] as String?,
 );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) =>
@@ -67,6 +68,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) =>
       'email': instance.email,
       'avatarUrl': instance.avatarUrl,
       'verified': instance.verified,
+      'profileComplete': instance.isProfileComplete,
       'createdAt': instance.createdAt,
     };
 
