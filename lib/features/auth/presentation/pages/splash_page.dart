@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/di/injection.dart';
@@ -24,6 +25,11 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _decideNextRoute() async {
+    final signature = await SmsAutoFill().getAppSignature;
+    debugPrint('==========================================');
+    debugPrint('APP SIGNATURE HASH: [$signature]');
+    debugPrint('==========================================');
+
     await Future.delayed(const Duration(milliseconds: 2500));
     if (!mounted) return;
 

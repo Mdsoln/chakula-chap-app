@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:chakula_chap/core/widgets/chakula_chap_button.dart';
 import 'package:chakula_chap/core/widgets/chakula_chap_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/di/injection.dart';
@@ -38,7 +40,7 @@ class _OtpView extends StatefulWidget {
   State<_OtpView> createState() => _OtpViewState();
 }
 
-class _OtpViewState extends State<_OtpView> {
+class _OtpViewState extends State<_OtpView> with CodeAutoFill {
   final _pinController = TextEditingController();
   final _focusNode = FocusNode();
   late Timer _timer;
@@ -50,10 +52,28 @@ class _OtpViewState extends State<_OtpView> {
   void initState() {
     super.initState();
     _startTimer();
+    _listenForOtp();
+  }
+
+  Future<void> _listenForOtp() async {
+    await SmsAutoFill().listenForCode();
+  }
+
+  @override
+  void codeUpdated() {
+    setState(() {
+      _pinController.text = code ?? "";
+    });
+    if (code != null && code!.length == AppConstants.otpLength && mounted) {
+      _pinController.setText(code!);
+      _onOtpComplete(code!);
+    }
   }
 
   @override
   void dispose() {
+    SmsAutoFill().unregisterListener();
+    cancel();
     _timer.cancel();
     _pinController.dispose();
     _focusNode.dispose();
@@ -216,6 +236,12 @@ class _OtpViewState extends State<_OtpView> {
         focusNode: _focusNode,
         autofocus: true,
         onCompleted: _onOtpComplete,
+        autofillHints: const [AutofillHints.oneTimeCode],
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(9),
+        ],
         defaultPinTheme: defaultPinTheme,
         focusedPinTheme: defaultPinTheme.copyWith(
           decoration: BoxDecoration(

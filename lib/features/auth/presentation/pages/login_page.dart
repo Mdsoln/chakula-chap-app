@@ -68,7 +68,11 @@ class _LoginViewState extends State<_LoginView>
   void _onSendOtp() {
     if (!_formKey.currentState!.validate()) return;
     FocusScope.of(context).unfocus();
-    final rawPhone = '+255${_phoneController.text.trim()}';
+
+    String digits = _phoneController.text.trim();
+    if (digits.startsWith('0')) digits = digits.substring(1);
+
+    final rawPhone = '+255$digits';
     context.read<AuthBloc>().add(SendOtpEvent(phone: rawPhone));
   }
 
@@ -211,7 +215,8 @@ class _LoginViewState extends State<_LoginView>
               Expanded(
                 child: TextFormField(
                   controller: _phoneController,
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.number,
+                  autofillHints: const [AutofillHints.telephoneNumber],
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(9),
@@ -228,8 +233,9 @@ class _LoginViewState extends State<_LoginView>
                     if (value == null || value.isEmpty) {
                       return 'Enter your phone number';
                     }
-                    if (value.length < 9) {
-                      return 'Enter a valid 9-digit number';
+                    final digits = value.startsWith('0') ? value.substring(1) : value;
+                    if (digits.length < 9) {
+                      return 'Enter a valid phone number';
                     }
                     return null;
                   },
