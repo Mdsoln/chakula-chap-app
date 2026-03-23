@@ -116,7 +116,7 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
-  Future<bool> logout() async {
+  Future<bool> logout(String? refreshToken) async {
     await Future.delayed(const Duration(milliseconds: 300));
     return true;
   }

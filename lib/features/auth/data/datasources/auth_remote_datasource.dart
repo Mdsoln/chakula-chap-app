@@ -13,7 +13,7 @@ abstract class AuthRemoteDataSource {
     String? deviceInfo,
   });
   Future<AuthSessionModel> refreshToken(String refreshToken);
-  Future<bool> logout();
+  Future<bool> logout(String? refreshToken);
   Future<UserModel> completeProfile({required String phone, required String fullName, String? email});
 }
 
@@ -74,9 +74,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<bool> logout() async {
+  Future<bool> logout(String? refreshToken) async {
     try {
-      await _client.dio.post(ApiEndpoints.logout);
+      await _client.dio.post(
+        ApiEndpoints.logout,
+        data: refreshToken != null ? {'refreshToken': refreshToken} : null,
+      );
       return true;
     } on DioException catch (e) {
       throw DioErrorMapper.map(e);

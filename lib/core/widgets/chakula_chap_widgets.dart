@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -140,8 +141,90 @@ class ChakulaChapErrorState extends StatelessWidget {
   }
 }
 
-// ── Snackbar Helper ───────────────────────────────────────────────────────────
+// ── Customer Number Pad ───────────────────────────────────────────────────────────
+class ChakulaChapNumpad extends StatelessWidget {
+  final TextEditingController controller;
+  final int maxLength;
+  final VoidCallback? onComplete;
 
+  const ChakulaChapNumpad({
+    super.key,
+    required this.controller,
+    this.maxLength = 9,
+    this.onComplete,
+  });
+
+  void _onKeyTap(String key) {
+    HapticFeedback.lightImpact();
+    if (controller.text.length >= maxLength) return;
+    controller.text += key;
+    controller.selection = TextSelection.fromPosition(
+      TextPosition(offset: controller.text.length),
+    );
+    if (controller.text.length == maxLength) onComplete?.call();
+  }
+
+  void _onBackspace() {
+    HapticFeedback.mediumImpact();
+    if (controller.text.isEmpty) return;
+    controller.text =
+        controller.text.substring(0, controller.text.length - 1);
+    controller.selection = TextSelection.fromPosition(
+      TextPosition(offset: controller.text.length),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final keys = ['1','2','3','4','5','6','7','8','9','','0','⌫'];
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 1.6,
+      ),
+      itemCount: keys.length,
+      itemBuilder: (_, i) {
+        final key = keys[i];
+
+        if (key.isEmpty) return const SizedBox.shrink();
+
+        final isBackspace = key == '⌫';
+
+        return Ink(
+          decoration: BoxDecoration(
+            color: AppColors.navyMedium,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+            border: Border.all(color: AppColors.navyAccent, width: 0.5),
+          ),
+          child: InkWell(
+            onTap: isBackspace ? _onBackspace : () => _onKeyTap(key),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusLg), // ← ripple follows shape
+            child: Container(
+              alignment: Alignment.center,
+              child: isBackspace
+                  ? const Icon(
+                Icons.backspace_outlined,
+                color: AppColors.textSecondary,
+                size: 22,
+              )
+                  : Text(
+                key,
+                style: AppTextStyles.h2,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// ── Snackbar Helper ───────────────────────────────────────────────────────────
 void showChakulaChapSnackbar(
     BuildContext context, {
       required String message,
