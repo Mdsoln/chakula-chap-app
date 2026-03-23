@@ -14,9 +14,7 @@ abstract class AuthRepository {
   Future<Either<Failure, UserEntity?>> getCurrentUser();
 
   Future<Either<Failure, AuthSessionEntity>> refreshToken();
-
   Future<Either<Failure, bool>> logout();
-
   Future<bool> get isAuthenticated;
 
   Future<Either<Failure, UserEntity>> completeProfile({
