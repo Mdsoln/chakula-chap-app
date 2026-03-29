@@ -26,36 +26,36 @@ abstract class MockData {
 
   static final List<MenuItemModel> menuItems = [
     // ── Rice Dishes ──────────────────────────────────────────
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-01', categoryId: 'cat-01',
       name: 'Wali wa Nazi na Kuku',
       description: 'Aromatic coconut rice slow-cooked with tender chicken, served with kachumbari and tamarind chutney.',
       price: 12000, emoji: '🍚', rating: 4.8, reviewCount: 312,
       prepTimeMinutes: 25, calories: 620, isAvailable: true, isFeatured: true, tag: '🔥 Best Seller',
       variants: [
-        const MenuItemVariantModel(id: 'v-01a', label: 'Half portion', priceModifier: -3000),
-        const MenuItemVariantModel(id: 'v-01b', label: 'Extra Chicken', priceModifier: 4000),
+        MenuItemVariantModel(id: 'v-01a', label: 'Half portion', priceModifier: -3000),
+        MenuItemVariantModel(id: 'v-01b', label: 'Extra Chicken', priceModifier: 4000),
       ],
       extras: [
-        const MenuItemExtraModel(id: 'e-01', name: 'Extra Kachumbari', price: 1000),
-        const MenuItemExtraModel(id: 'e-02', name: 'Avocado', price: 2000),
+        MenuItemExtraModel(id: 'e-01', name: 'Extra Kachumbari', price: 1000),
+        MenuItemExtraModel(id: 'e-02', name: 'Avocado', price: 2000),
       ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-02', categoryId: 'cat-01',
       name: 'Pilau ya Nyama',
       description: 'Zanzibar-style spiced pilau with slow-braised beef, garnished with fried onions and raita.',
       price: 14000, emoji: '🫕', rating: 4.9, reviewCount: 540,
       prepTimeMinutes: 30, calories: 710, isAvailable: true, isFeatured: true, tag: '⭐ Top Rated',
       variants: [
-        const MenuItemVariantModel(id: 'v-02a', label: 'Chicken instead', priceModifier: -2000),
+        MenuItemVariantModel(id: 'v-02a', label: 'Chicken instead', priceModifier: -2000),
       ],
       extras: [
-        const MenuItemExtraModel(id: 'e-03', name: 'Raita extra', price: 1500),
-        const MenuItemExtraModel(id: 'e-02', name: 'Avocado', price: 2000),
+        MenuItemExtraModel(id: 'e-03', name: 'Raita extra', price: 1500),
+        MenuItemExtraModel(id: 'e-02', name: 'Avocado', price: 2000),
       ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-03', categoryId: 'cat-01',
       name: 'Wali Mboga na Samaki',
       description: 'White rice paired with coconut fish curry and seasonal greens. Light and flavourful.',
@@ -63,22 +63,22 @@ abstract class MockData {
       prepTimeMinutes: 20, calories: 490, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-04', categoryId: 'cat-01',
       name: 'Biryani ya Kuku',
       description: 'Fragrant basmati rice layered with spiced chicken, saffron and rose water. A festive classic.',
       price: 16000, emoji: '🍗', rating: 4.7, reviewCount: 228,
       prepTimeMinutes: 35, calories: 780, isAvailable: true, isFeatured: true, tag: '🆕 New',
       variants: [
-        const MenuItemVariantModel(id: 'v-04a', label: 'Vegetarian', priceModifier: -3000),
-        const MenuItemVariantModel(id: 'v-04b', label: 'Prawn', priceModifier: 5000),
+        MenuItemVariantModel(id: 'v-04a', label: 'Vegetarian', priceModifier: -3000),
+        MenuItemVariantModel(id: 'v-04b', label: 'Prawn', priceModifier: 5000),
       ],
       extras: [
-        const MenuItemExtraModel(id: 'e-04', name: 'Boiled Egg', price: 1000),
-        const MenuItemExtraModel(id: 'e-05', name: 'Extra Sauce', price: 1500),
+        MenuItemExtraModel(id: 'e-04', name: 'Boiled Egg', price: 1000),
+        MenuItemExtraModel(id: 'e-05', name: 'Extra Sauce', price: 1500),
       ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-05', categoryId: 'cat-01',
       name: 'Ugali na Maharage',
       description: 'Classic stiff ugali served with rich red kidney bean stew. Comfort food at its best.',
@@ -86,7 +86,7 @@ abstract class MockData {
       prepTimeMinutes: 15, calories: 520, isAvailable: true, isFeatured: false, tag: '💚 Vegan',
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-06', categoryId: 'cat-01',
       name: 'Wali Nyeupe na Mchuzi wa Nyama',
       description: 'Simple white rice with a slow-simmered beef curry. The people\'s favourite.',
@@ -96,102 +96,102 @@ abstract class MockData {
     ),
 
     // ── Grills ────────────────────────────────────────────────
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-07', categoryId: 'cat-02',
       name: 'Nyama Choma Platter',
       description: 'Mixed charcoal-grilled beef, goat, and chicken with kachumbari, ugali, and green chilli sauce.',
       price: 28000, emoji: '🍖', rating: 4.9, reviewCount: 671,
       prepTimeMinutes: 40, calories: 920, isAvailable: true, isFeatured: true, tag: '🔥 Best Seller',
       variants: [
-        const MenuItemVariantModel(id: 'v-07a', label: 'Beef only', priceModifier: -5000),
-        const MenuItemVariantModel(id: 'v-07b', label: 'Goat only', priceModifier: -4000),
+        MenuItemVariantModel(id: 'v-07a', label: 'Beef only', priceModifier: -5000),
+        MenuItemVariantModel(id: 'v-07b', label: 'Goat only', priceModifier: -4000),
       ],
       extras: [
-        const MenuItemExtraModel(id: 'e-06', name: 'Extra Ugali', price: 2000),
-        const MenuItemExtraModel(id: 'e-07', name: 'Chilli Sauce', price: 500),
+        MenuItemExtraModel(id: 'e-06', name: 'Extra Ugali', price: 2000),
+        MenuItemExtraModel(id: 'e-07', name: 'Chilli Sauce', price: 500),
       ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-08', categoryId: 'cat-02',
       name: 'Grilled Tilapia',
       description: 'Whole tilapia marinated in lemon, garlic, and Swahili spices, grilled to perfection.',
       price: 18000, emoji: '🐠', rating: 4.7, reviewCount: 289,
       prepTimeMinutes: 30, calories: 480, isAvailable: true, isFeatured: true, tag: '⭐ Top Rated',
       variants: [], extras: [
-      const MenuItemExtraModel(id: 'e-08', name: 'Chips', price: 3000),
-      const MenuItemExtraModel(id: 'e-09', name: 'Coleslaw', price: 1500),
+      MenuItemExtraModel(id: 'e-08', name: 'Chips', price: 3000),
+      MenuItemExtraModel(id: 'e-09', name: 'Coleslaw', price: 1500),
     ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-09', categoryId: 'cat-02',
       name: 'Mishkaki ya Kuku',
       description: 'Juicy chicken skewers marinated overnight in coconut milk, ginger, and paprika.',
       price: 10000, emoji: '🍢', rating: 4.6, reviewCount: 215,
       prepTimeMinutes: 20, calories: 390, isAvailable: true, isFeatured: false, tag: null,
       variants: [
-        const MenuItemVariantModel(id: 'v-09a', label: '6 skewers', priceModifier: 0),
-        const MenuItemVariantModel(id: 'v-09b', label: '12 skewers', priceModifier: 8000),
+        MenuItemVariantModel(id: 'v-09a', label: '6 skewers', priceModifier: 0),
+        MenuItemVariantModel(id: 'v-09b', label: '12 skewers', priceModifier: 8000),
       ],
       extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-10', categoryId: 'cat-02',
       name: 'Grilled Prawns',
       description: 'Tiger prawns grilled with garlic butter, lime, and fresh coriander. Coastal delicacy.',
       price: 24000, emoji: '🦐', rating: 4.8, reviewCount: 198,
       prepTimeMinutes: 25, calories: 340, isAvailable: true, isFeatured: true, tag: '🌟 Premium',
       variants: [], extras: [
-      const MenuItemExtraModel(id: 'e-08', name: 'Chips', price: 3000),
+      MenuItemExtraModel(id: 'e-08', name: 'Chips', price: 3000),
     ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-11', categoryId: 'cat-02',
       name: 'BBQ Chicken Half',
       description: 'Half chicken marinated in smoky BBQ sauce, slow-grilled for 45 minutes.',
       price: 15000, emoji: '🍗', rating: 4.5, reviewCount: 176,
       prepTimeMinutes: 45, calories: 680, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [
-      const MenuItemExtraModel(id: 'e-08', name: 'Chips', price: 3000),
-      const MenuItemExtraModel(id: 'e-10', name: 'Garlic Bread', price: 2000),
+      MenuItemExtraModel(id: 'e-08', name: 'Chips', price: 3000),
+      MenuItemExtraModel(id: 'e-10', name: 'Garlic Bread', price: 2000),
     ],
     ),
 
     // ── Street Food ───────────────────────────────────────────
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-12', categoryId: 'cat-03',
       name: 'Zanzibar Pizza',
       description: 'Street-style crepe filled with minced meat, egg, onion, and cheese. Crispy and golden.',
       price: 7000, emoji: '🥙', rating: 4.8, reviewCount: 489,
       prepTimeMinutes: 12, calories: 420, isAvailable: true, isFeatured: true, tag: '🔥 Best Seller',
       variants: [
-        const MenuItemVariantModel(id: 'v-12a', label: 'Vegetarian', priceModifier: -1000),
-        const MenuItemVariantModel(id: 'v-12b', label: 'Extra Cheese', priceModifier: 1500),
-        const MenuItemVariantModel(id: 'v-12c', label: 'Sweet (Nutella + Banana)', priceModifier: 2000),
+        MenuItemVariantModel(id: 'v-12a', label: 'Vegetarian', priceModifier: -1000),
+        MenuItemVariantModel(id: 'v-12b', label: 'Extra Cheese', priceModifier: 1500),
+        MenuItemVariantModel(id: 'v-12c', label: 'Sweet (Nutella + Banana)', priceModifier: 2000),
       ],
       extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-13', categoryId: 'cat-03',
       name: 'Viazi Karai',
       description: 'Potatoes in a spiced chickpea batter, deep-fried until crisp. Topped with tamarind chutney.',
       price: 4000, emoji: '🥔', rating: 4.6, reviewCount: 322,
       prepTimeMinutes: 10, calories: 310, isAvailable: true, isFeatured: false, tag: '💚 Vegan',
       variants: [], extras: [
-      const MenuItemExtraModel(id: 'e-11', name: 'Extra Chutney', price: 500),
+      MenuItemExtraModel(id: 'e-11', name: 'Extra Chutney', price: 500),
     ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-14', categoryId: 'cat-03',
       name: 'Samosa za Nyama (6 pcs)',
       description: 'Crispy triangular pastries filled with spiced minced beef and green peas.',
       price: 5000, emoji: '🥟', rating: 4.5, reviewCount: 267,
       prepTimeMinutes: 8, calories: 380, isAvailable: true, isFeatured: true, tag: null,
       variants: [
-        const MenuItemVariantModel(id: 'v-14a', label: 'Vegetable filling', priceModifier: -1000),
+        MenuItemVariantModel(id: 'v-14a', label: 'Vegetable filling', priceModifier: -1000),
       ],
       extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-15', categoryId: 'cat-03',
       name: 'Mkate wa Mofa',
       description: 'Traditional Swahili flatbread baked in a clay oven. Perfect with any stew or curry.',
@@ -199,20 +199,20 @@ abstract class MockData {
       prepTimeMinutes: 15, calories: 250, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-16', categoryId: 'cat-03',
       name: 'Chips Mayai',
       description: 'A Tanzanian street staple — thick chips bound together with egg and fried as a hearty omelette.',
       price: 6000, emoji: '🍳', rating: 4.7, reviewCount: 403,
       prepTimeMinutes: 15, calories: 510, isAvailable: true, isFeatured: true, tag: '⭐ Top Rated',
       variants: [
-        const MenuItemVariantModel(id: 'v-16a', label: 'With kachumbari', priceModifier: 500),
+        MenuItemVariantModel(id: 'v-16a', label: 'With kachumbari', priceModifier: 500),
       ],
       extras: [
-        const MenuItemExtraModel(id: 'e-12', name: 'Chilli Sauce', price: 500),
+        MenuItemExtraModel(id: 'e-12', name: 'Chilli Sauce', price: 500),
       ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-17', categoryId: 'cat-03',
       name: 'Mandazi (4 pcs)',
       description: 'Lightly sweetened East African doughnuts flavoured with cardamom and coconut milk.',
@@ -220,7 +220,7 @@ abstract class MockData {
       prepTimeMinutes: 10, calories: 280, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-18', categoryId: 'cat-03',
       name: 'Urojo (Zanzibar Mix)',
       description: 'Tangy mango soup loaded with bhajias, viazi karai, samosa pieces, and chilli. Iconic street dish.',
@@ -230,17 +230,17 @@ abstract class MockData {
     ),
 
     // ── Soups & Stews ──────────────────────────────────────────
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-19', categoryId: 'cat-04',
       name: 'Mchuzi wa Samaki',
       description: 'Coastal fish curry in a rich coconut and tomato gravy, simmered with Zanzibar spices.',
       price: 13000, emoji: '🍛', rating: 4.6, reviewCount: 201,
       prepTimeMinutes: 25, calories: 420, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [
-      const MenuItemExtraModel(id: 'e-06', name: 'Extra Ugali', price: 2000),
+      MenuItemExtraModel(id: 'e-06', name: 'Extra Ugali', price: 2000),
     ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-20', categoryId: 'cat-04',
       name: 'Supu ya Ndizi',
       description: 'Hearty green banana soup with goat meat, spiced with fresh ginger and coriander.',
@@ -248,7 +248,7 @@ abstract class MockData {
       prepTimeMinutes: 35, calories: 480, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-21', categoryId: 'cat-04',
       name: 'Bone Broth Soup',
       description: 'Rich slow-simmered beef bone soup with vegetables. Great for cold mornings.',
@@ -256,7 +256,7 @@ abstract class MockData {
       prepTimeMinutes: 20, calories: 280, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-22', categoryId: 'cat-04',
       name: 'Lentil Soup (Supu ya Dengu)',
       description: 'Creamy red lentil soup cooked with cumin, turmeric, and lemon. Vegan and filling.',
@@ -266,17 +266,17 @@ abstract class MockData {
     ),
 
     // ── Seafood ────────────────────────────────────────────────
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-23', categoryId: 'cat-05',
       name: 'Coconut Prawn Curry',
       description: 'Jumbo prawns in a velvety coconut milk curry with lemongrass and kaffir lime.',
       price: 22000, emoji: '🦞', rating: 4.8, reviewCount: 256,
       prepTimeMinutes: 25, calories: 520, isAvailable: true, isFeatured: true, tag: '🌟 Premium',
       variants: [], extras: [
-      const MenuItemExtraModel(id: 'e-06', name: 'Extra Ugali', price: 2000),
+      MenuItemExtraModel(id: 'e-06', name: 'Extra Ugali', price: 2000),
     ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-24', categoryId: 'cat-05',
       name: 'Calamari Rings',
       description: 'Crispy golden calamari with a light batter, served with garlic aioli.',
@@ -284,7 +284,7 @@ abstract class MockData {
       prepTimeMinutes: 15, calories: 380, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-25', categoryId: 'cat-05',
       name: 'Octopus Salad',
       description: 'Tender octopus tossed with cucumber, tomato, red onion, lime juice and olive oil.',
@@ -292,7 +292,7 @@ abstract class MockData {
       prepTimeMinutes: 20, calories: 290, isAvailable: true, isFeatured: true, tag: '⭐ Top Rated',
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-26', categoryId: 'cat-05',
       name: 'Crab in Garlic Butter',
       description: 'Fresh local crab halves sautéed in garlic, butter, and white wine. Market-fresh.',
@@ -300,7 +300,7 @@ abstract class MockData {
       prepTimeMinutes: 30, calories: 440, isAvailable: true, isFeatured: true, tag: '🌟 Premium',
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-27', categoryId: 'cat-05',
       name: 'Fish & Chips',
       description: 'Beer-battered local white fish with crispy chips, tartar sauce, and a lemon wedge.',
@@ -310,18 +310,18 @@ abstract class MockData {
     ),
 
     // ── Drinks ─────────────────────────────────────────────────
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-28', categoryId: 'cat-06',
       name: 'Fresh Passion Juice',
       description: 'Pressed fresh passionfruit chilled with ice. No added sugar.',
       price: 4000, emoji: '🧃', rating: 4.7, reviewCount: 344,
       prepTimeMinutes: 3, calories: 90, isAvailable: true, isFeatured: true, tag: null,
       variants: [
-        const MenuItemVariantModel(id: 'v-28a', label: 'Large (750ml)', priceModifier: 2000),
+        MenuItemVariantModel(id: 'v-28a', label: 'Large (750ml)', priceModifier: 2000),
       ],
       extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-29', categoryId: 'cat-06',
       name: 'Avocado Smoothie',
       description: 'Thick blended avocado with milk, honey, and vanilla. Rich and nutritious.',
@@ -329,7 +329,7 @@ abstract class MockData {
       prepTimeMinutes: 5, calories: 310, isAvailable: true, isFeatured: true, tag: '🔥 Trending',
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-30', categoryId: 'cat-06',
       name: 'Tangawizi Lemonade',
       description: 'Fresh ginger and lemon juice with honey, sparkling water, and mint. Refreshing kick.',
@@ -337,7 +337,7 @@ abstract class MockData {
       prepTimeMinutes: 3, calories: 70, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-31', categoryId: 'cat-06',
       name: 'Madafu (Fresh Coconut)',
       description: 'Young green coconut served ice-cold. Nature\'s own sports drink.',
@@ -345,7 +345,7 @@ abstract class MockData {
       prepTimeMinutes: 2, calories: 60, isAvailable: true, isFeatured: true, tag: '💚 Natural',
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-32', categoryId: 'cat-06',
       name: 'Chai ya Tangawizi',
       description: 'Swahili spiced ginger milk tea. Warm, comforting, and perfectly spiced.',
@@ -353,7 +353,7 @@ abstract class MockData {
       prepTimeMinutes: 5, calories: 120, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-33', categoryId: 'cat-06',
       name: 'Tamarind Juice',
       description: 'Tangy-sweet tamarind drink with a touch of chilli and rock salt. A Zanzibar classic.',
@@ -363,7 +363,7 @@ abstract class MockData {
     ),
 
     // ── Desserts ───────────────────────────────────────────────
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-34', categoryId: 'cat-07',
       name: 'Kashata ya Nazi',
       description: 'Crunchy coconut candy sweetened with jaggery and cardamom. Bite-sized squares.',
@@ -371,7 +371,7 @@ abstract class MockData {
       prepTimeMinutes: 5, calories: 200, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-35', categoryId: 'cat-07',
       name: 'Halwa ya Zanzibar',
       description: 'Rich gelatinous halwa flavoured with rose water, cardamom, and saffron. Melt-in-mouth.',
@@ -379,7 +379,7 @@ abstract class MockData {
       prepTimeMinutes: 5, calories: 280, isAvailable: true, isFeatured: true, tag: '⭐ Top Rated',
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-36', categoryId: 'cat-07',
       name: 'Maandazi na Chai',
       description: 'Warm cardamom doughnuts served with a pot of masala tea. Classic afternoon treat.',
@@ -387,7 +387,7 @@ abstract class MockData {
       prepTimeMinutes: 10, calories: 350, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-37', categoryId: 'cat-07',
       name: 'Mango Sorbet',
       description: 'Homemade mango sorbet with Alphonso mango pulp. No dairy, naturally vegan.',
@@ -397,17 +397,17 @@ abstract class MockData {
     ),
 
     // ── Breakfast ──────────────────────────────────────────────
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-38', categoryId: 'cat-08',
       name: 'Full Swahili Breakfast',
       description: 'Vitumbua, mandazi, boiled egg, uji wa mtama, and freshly brewed chai. The full spread.',
       price: 8000, emoji: '🍽️', rating: 4.7, reviewCount: 234,
       prepTimeMinutes: 15, calories: 580, isAvailable: true, isFeatured: true, tag: '🌅 Breakfast',
       variants: [], extras: [
-      const MenuItemExtraModel(id: 'e-04', name: 'Extra Egg', price: 1000),
+      MenuItemExtraModel(id: 'e-04', name: 'Extra Egg', price: 1000),
     ],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-39', categoryId: 'cat-08',
       name: 'Vitumbua (6 pcs)',
       description: 'Soft coconut rice pancakes pan-fried in a special mould. Slightly sweet and fluffy.',
@@ -415,7 +415,7 @@ abstract class MockData {
       prepTimeMinutes: 12, calories: 320, isAvailable: true, isFeatured: false, tag: null,
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-40', categoryId: 'cat-08',
       name: 'Uji wa Mtama',
       description: 'Warm sorghum porridge sweetened with coconut milk. Nutrient-rich morning fuel.',
@@ -423,7 +423,7 @@ abstract class MockData {
       prepTimeMinutes: 8, calories: 210, isAvailable: true, isFeatured: false, tag: '💚 Vegan',
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-41', categoryId: 'cat-08',
       name: 'Eggs Benedict Swahili Style',
       description: 'Poached eggs on mkate wa mofa, topped with spiced hollandaise and fresh coriander.',
@@ -431,7 +431,7 @@ abstract class MockData {
       prepTimeMinutes: 18, calories: 490, isAvailable: true, isFeatured: true, tag: '🆕 New',
       variants: [], extras: [],
     ),
-    MenuItemModel(
+    const MenuItemModel(
       id: 'item-42', categoryId: 'cat-08',
       name: 'Avocado Toast',
       description: 'Thick toast smeared with smashed avocado, chilli flakes, lime, and poached egg.',
@@ -443,7 +443,7 @@ abstract class MockData {
 
   // ── Mock Rider ─────────────────────────────────────────────────────────────
 
-  static final RiderModel mockRider = RiderModel(
+  static const RiderModel mockRider = RiderModel(
     id: 'rider-01',
     name: 'Juma Bakari',
     phone: '+255 745 123 456',

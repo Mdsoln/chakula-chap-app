@@ -46,7 +46,7 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
       final res = await _client.dio.get(
         ApiEndpoints.menuItems,
         queryParameters: {
-          if (categoryId != null) 'category_id': categoryId,
+          if (categoryId != null) 'categoryId': categoryId,
           if (search != null && search.isNotEmpty) 'search': search,
           'page': page,
           'size': pageSize,

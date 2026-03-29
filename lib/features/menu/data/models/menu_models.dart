@@ -8,7 +8,7 @@ class CategoryModel {
   final String id;
   final String name;
   final String emoji;
-  @JsonKey(name: 'item_count', defaultValue: 0)
+  @JsonKey(name: 'itemCount', defaultValue: 0)
   final int itemCount;
 
   const CategoryModel({
@@ -34,7 +34,7 @@ class CategoryModel {
 class MenuItemVariantModel {
   final String id;
   final String label;
-  @JsonKey(name: 'price_modifier', defaultValue: 0.0)
+  @JsonKey(name: 'priceModifier', defaultValue: 0.0)
   final double priceModifier;
 
   const MenuItemVariantModel({
@@ -80,22 +80,22 @@ class MenuItemModel {
   final String name;
   final String description;
   final double price;
-  @JsonKey(name: 'category_id')
+  @JsonKey(name: 'categoryId')
   final String categoryId;
   final String emoji;
-  @JsonKey(name: 'image_url')
+  @JsonKey(name: 'imageUrl')
   final String? imageUrl;
   @JsonKey(defaultValue: 0.0)
   final double rating;
-  @JsonKey(name: 'review_count', defaultValue: 0)
+  @JsonKey(name: 'reviewCount', defaultValue: 0)
   final int reviewCount;
-  @JsonKey(name: 'prep_time_minutes', defaultValue: 15)
+  @JsonKey(name: 'prepTimeMinutes', defaultValue: 15)
   final int prepTimeMinutes;
   @JsonKey(defaultValue: 0)
   final int calories;
-  @JsonKey(name: 'is_available', defaultValue: true)
+  @JsonKey(name: 'available', defaultValue: true)
   final bool isAvailable;
-  @JsonKey(name: 'is_featured', defaultValue: false)
+  @JsonKey(name: 'featured', defaultValue: false)
   final bool isFeatured;
   final String? tag;
   @JsonKey(defaultValue: [])

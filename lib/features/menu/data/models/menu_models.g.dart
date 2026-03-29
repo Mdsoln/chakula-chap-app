@@ -61,7 +61,7 @@ MenuItemModel _$MenuItemModelFromJson(Map<String, dynamic> json) =>
       prepTimeMinutes: json['prep_time_minutes'] as int? ?? 15,
       calories: json['calories'] as int? ?? 0,
       isAvailable: json['is_available'] as bool? ?? true,
-      isFeatured: json['is_featured'] as bool? ?? false,
+      isFeatured: json['featured'] as bool? ?? false,
       tag: json['tag'] as String?,
       variants: (json['variants'] as List<dynamic>?)
           ?.map((e) =>
