@@ -82,8 +82,9 @@ abstract class ApiEndpoints {
   static const String profile = '/auth/profile';
 
   // Menu
-  static const String categories  = '/menu/categories';
+  static const String categories  = '/menu/categories/active';
   static const String menuItems   = '/menu/items';
+  static const String featuredItems = '/menu/featured';
   static String menuItemById(String id) => '/menu/items/$id';
 
   // Orders

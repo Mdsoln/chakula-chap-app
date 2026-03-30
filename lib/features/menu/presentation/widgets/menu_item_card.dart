@@ -126,19 +126,17 @@ class _MenuItemCardState extends State<MenuItemCard>
 
   Widget _buildDetails() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+      padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        // ✅ Remove mainAxisSize: min — let the column fill the available height
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // ✅ Wrap name in Flexible so it doesn't overflow when text is long
-          Flexible(
-            child: Text(
-              widget.item.name,
-              style: AppTextStyles.labelLarge.copyWith(height: 1.2),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+          Text(
+            widget.item.name,
+            style: AppTextStyles.labelLarge.copyWith(height: 1.2),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            // No Flexible — Text handles overflow via maxLines + ellipsis
           ),
           const SizedBox(height: 3),
           Row(

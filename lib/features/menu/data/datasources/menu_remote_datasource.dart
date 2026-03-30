@@ -75,8 +75,8 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
   Future<List<MenuItemModel>> getFeaturedItems() async {
     try {
       final res = await _client.dio.get(
-        ApiEndpoints.menuItems,
-        queryParameters: {'featured': true, 'size': 6},
+        ApiEndpoints.featuredItems,
+        queryParameters: {'page': 1, 'size': 6},
       );
       final list = res.data['data'] as List<dynamic>;
       return list
