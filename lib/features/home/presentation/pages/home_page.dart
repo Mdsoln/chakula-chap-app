@@ -103,7 +103,7 @@ class _HomeViewState extends State<_HomeView> {
             controller: _scrollController,
             slivers: [
               _appBar(),
-              _greetingBanner(),
+              //_greetingBanner(),
               _searchBar(),
               _featuredBanner(),
               _categoryRow(),

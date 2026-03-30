@@ -6,7 +6,7 @@ CategoryModel _$CategoryModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       name: json['name'] as String,
       emoji: json['emoji'] as String,
-      itemCount: json['item_count'] as int? ?? 0,
+      itemCount: json['itemCount'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$CategoryModelToJson(CategoryModel instance) =>
@@ -22,7 +22,7 @@ MenuItemVariantModel _$MenuItemVariantModelFromJson(
     MenuItemVariantModel(
       id: json['id'] as String,
       label: json['label'] as String,
-      priceModifier: (json['price_modifier'] as num?)?.toDouble() ?? 0.0,
+      priceModifier: (json['priceModifier'] as num?)?.toDouble() ?? 0.0,
     );
 
 Map<String, dynamic> _$MenuItemVariantModelToJson(
@@ -53,14 +53,14 @@ MenuItemModel _$MenuItemModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       description: json['description'] as String,
       price: (json['price'] as num).toDouble(),
-      categoryId: json['category_id'] as String,
+      categoryId: json['categoryId'] as String,
       emoji: json['emoji'] as String,
-      imageUrl: json['image_url'] as String?,
+      imageUrl: json['imageUrl'] as String?,
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
-      reviewCount: json['review_count'] as int? ?? 0,
-      prepTimeMinutes: json['prep_time_minutes'] as int? ?? 15,
+      reviewCount: json['reviewCount'] as int? ?? 0,
+      prepTimeMinutes: json['prepTimeMinutes'] as int? ?? 15,
       calories: json['calories'] as int? ?? 0,
-      isAvailable: json['is_available'] as bool? ?? true,
+      isAvailable: json['available'] as bool? ?? true,
       isFeatured: json['featured'] as bool? ?? false,
       tag: json['tag'] as String?,
       variants: (json['variants'] as List<dynamic>?)

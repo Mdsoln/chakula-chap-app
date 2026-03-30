@@ -129,28 +129,27 @@ class _MenuItemCardState extends State<MenuItemCard>
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+        // ✅ Remove mainAxisSize: min — let the column fill the available height
         children: [
-          Text(
-            widget.item.name,
-            style: AppTextStyles.labelLarge.copyWith(height: 1.2),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          // ✅ Wrap name in Flexible so it doesn't overflow when text is long
+          Flexible(
+            child: Text(
+              widget.item.name,
+              style: AppTextStyles.labelLarge.copyWith(height: 1.2),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
           const SizedBox(height: 3),
           Row(
             children: [
-              const Icon(Icons.star_rounded,
-                  size: 12, color: AppColors.goldBright),
+              const Icon(Icons.star_rounded, size: 12, color: AppColors.goldBright),
               const SizedBox(width: 3),
-              Text(widget.item.rating.toString(),
-                  style: AppTextStyles.bodySmall),
+              Text(widget.item.rating.toString(), style: AppTextStyles.bodySmall),
               const SizedBox(width: 6),
-              const Icon(Icons.access_time_rounded,
-                  size: 11, color: AppColors.textMuted),
+              const Icon(Icons.access_time_rounded, size: 11, color: AppColors.textMuted),
               const SizedBox(width: 3),
-              Text('${widget.item.prepTimeMinutes}m',
-                  style: AppTextStyles.bodySmall),
+              Text('${widget.item.prepTimeMinutes}m', style: AppTextStyles.bodySmall),
             ],
           ),
           const SizedBox(height: 6),
@@ -167,21 +166,15 @@ class _MenuItemCardState extends State<MenuItemCard>
                   width: 30,
                   height: 30,
                   decoration: BoxDecoration(
-                    gradient: widget.item.isAvailable
-                        ? AppColors.goldGradient
-                        : null,
-                    color: widget.item.isAvailable
-                        ? null
-                        : AppColors.navyAccent,
+                    gradient: widget.item.isAvailable ? AppColors.goldGradient : null,
+                    color: widget.item.isAvailable ? null : AppColors.navyAccent,
                     borderRadius: BorderRadius.circular(9),
                     boxShadow: widget.item.isAvailable
-                        ? [
-                      BoxShadow(
-                        color: AppColors.goldBright.withOpacity(0.4),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                      )
-                    ]
+                        ? [BoxShadow(
+                      color: AppColors.goldBright.withOpacity(0.4),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    )]
                         : null,
                   ),
                   child: Icon(
