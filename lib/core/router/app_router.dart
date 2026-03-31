@@ -23,6 +23,7 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/otp_page.dart';
+import '../network/auth_interceptor.dart';
 
 class _AppExtraCodec extends Codec<Object?, Object?> {
   const _AppExtraCodec();
@@ -187,6 +188,7 @@ class AppRouter {
   AppRouter(this._storage, this._authRepo);
 
   late final GoRouter router = GoRouter(
+    navigatorKey: AppNavigatorKey.navigatorKey,
     initialLocation: AppRoutes.splash,
     debugLogDiagnostics: true,
     redirect: _authGuard,
