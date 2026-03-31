@@ -462,7 +462,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ChakulaChapButton(
-                        label: 'Add to Cart · Tsh ${_total.toInt()}',
+                        label: 'Add to Cart • Tsh ${_total.toInt()}',
                         onPressed: _item!.available ? _addToCart : null,
                       ),
                     ),
