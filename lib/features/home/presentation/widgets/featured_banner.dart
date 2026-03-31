@@ -109,7 +109,7 @@ class _BannerCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             child: Row(
               children: [
                 Expanded(
@@ -130,8 +130,15 @@ class _BannerCard extends StatelessWidget {
                             style: AppTextStyles.caption.copyWith(color: AppColors.goldBright, letterSpacing: 0.5),
                           ),
                         ),
-                      const SizedBox(height: 6),
-                      Text(item.name, style: AppTextStyles.h2, maxLines: 2, overflow: TextOverflow.ellipsis),
+                      const SizedBox(height: 4),
+                      Flexible(
+                        child: Text(
+                          item.name,
+                          style: AppTextStyles.h2,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                       const SizedBox(height: 4),
                       Text(
                         'Tsh ${item.price.toInt()}',

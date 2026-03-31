@@ -107,7 +107,7 @@ class _MenuItemCardState extends State<MenuItemCard>
               ),
             ),
           ),
-        if (!widget.item.isAvailable)
+        if (!widget.item.available)
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(0.6),
@@ -159,15 +159,15 @@ class _MenuItemCardState extends State<MenuItemCard>
                 style: AppTextStyles.price.copyWith(fontSize: 14),
               ),
               GestureDetector(
-                onTap: widget.item.isAvailable ? widget.onAddToCart : null,
+                onTap: widget.item.available ? widget.onAddToCart : null,
                 child: Container(
                   width: 30,
                   height: 30,
                   decoration: BoxDecoration(
-                    gradient: widget.item.isAvailable ? AppColors.goldGradient : null,
-                    color: widget.item.isAvailable ? null : AppColors.navyAccent,
+                    gradient: widget.item.available ? AppColors.goldGradient : null,
+                    color: widget.item.available ? null : AppColors.navyAccent,
                     borderRadius: BorderRadius.circular(9),
-                    boxShadow: widget.item.isAvailable
+                    boxShadow: widget.item.available
                         ? [BoxShadow(
                       color: AppColors.goldBright.withOpacity(0.4),
                       blurRadius: 8,
@@ -178,7 +178,7 @@ class _MenuItemCardState extends State<MenuItemCard>
                   child: Icon(
                     Icons.add_rounded,
                     size: 18,
-                    color: widget.item.isAvailable
+                    color: widget.item.available
                         ? AppColors.navyDeep
                         : AppColors.textDisabled,
                   ),

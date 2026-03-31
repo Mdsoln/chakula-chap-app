@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -464,7 +463,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                     Expanded(
                       child: ChakulaChapButton(
                         label: 'Add to Cart · Tsh ${_total.toInt()}',
-                        onPressed: _item!.isAvailable ? _addToCart : null,
+                        onPressed: _item!.available ? _addToCart : null,
                       ),
                     ),
                   ],

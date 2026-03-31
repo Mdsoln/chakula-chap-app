@@ -94,9 +94,9 @@ class MenuItemModel {
   @JsonKey(defaultValue: 0)
   final int calories;
   @JsonKey(name: 'available', defaultValue: true)
-  final bool isAvailable;
+  final bool available;
   @JsonKey(name: 'featured', defaultValue: false)
-  final bool isFeatured;
+  final bool featured;
   final String? tag;
   @JsonKey(defaultValue: [])
   final List<MenuItemVariantModel> variants;
@@ -115,8 +115,8 @@ class MenuItemModel {
     required this.reviewCount,
     required this.prepTimeMinutes,
     required this.calories,
-    required this.isAvailable,
-    required this.isFeatured,
+    required this.available,
+    required this.featured,
     this.tag,
     required this.variants,
     required this.extras,
@@ -138,8 +138,8 @@ class MenuItemModel {
     reviewCount: reviewCount,
     prepTimeMinutes: prepTimeMinutes,
     calories: calories,
-    isAvailable: isAvailable,
-    isFeatured: isFeatured,
+    available: available,
+    featured: featured,
     tag: tag,
     variants: variants.map((v) => v.toEntity()).toList(),
     extras: extras.map((e) => e.toEntity()).toList(),

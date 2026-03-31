@@ -114,8 +114,8 @@ class OrderItemModel {
       reviewCount: 0,
       prepTimeMinutes: 0,
       calories: 0,
-      isAvailable: true,
-      isFeatured: false,
+      available: true,
+      featured: false,
       variants: const [],
       extras: const [],
     );

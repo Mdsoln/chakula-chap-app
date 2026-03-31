@@ -71,8 +71,8 @@ class _AppExtraEncoder extends Converter<Object?, Object?> {
         'reviewCount': input.reviewCount,
         'prepTimeMinutes': input.prepTimeMinutes,
         'calories': input.calories,
-        'isAvailable': input.isAvailable,
-        'isFeatured': input.isFeatured,
+        'available': input.available,
+        'featured': input.featured,
         'tag': input.tag,
         'variants': input.variants
             .map((v) => {
@@ -160,8 +160,8 @@ class _AppExtraDecoder extends Converter<Object?, Object?> {
           reviewCount: input['reviewCount'] as int,
           prepTimeMinutes: input['prepTimeMinutes'] as int,
           calories: input['calories'] as int,
-          isAvailable: input['isAvailable'] as bool,
-          isFeatured: input['isFeatured'] as bool,
+          available: input['available'] as bool,
+          featured: input['featured'] as bool,
           tag: input['tag'] as String?,
           variants: variantsList,
           extras: extrasList,

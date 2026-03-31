@@ -29,9 +29,9 @@ class MenuItemEntity extends Equatable {
   final int reviewCount;
   final int prepTimeMinutes;
   final int calories;
-  final bool isAvailable;
-  final bool isFeatured;
-  final String? tag; // "Best Seller", "New", etc.
+  final bool available;
+  final bool featured;
+  final String? tag;
   final List<MenuItemVariantEntity> variants;
   final List<MenuItemExtraEntity> extras;
 
@@ -47,15 +47,15 @@ class MenuItemEntity extends Equatable {
     required this.reviewCount,
     required this.prepTimeMinutes,
     required this.calories,
-    required this.isAvailable,
-    required this.isFeatured,
+    required this.available,
+    required this.featured,
     this.tag,
     required this.variants,
     required this.extras,
   });
 
   @override
-  List<Object?> get props => [id, name, price, categoryId, isAvailable];
+  List<Object?> get props => [id, name, price, categoryId, available];
 }
 
 class MenuItemVariantEntity extends Equatable {

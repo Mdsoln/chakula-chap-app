@@ -14,7 +14,7 @@ Map<String, dynamic> _$CategoryModelToJson(CategoryModel instance) =>
       'id': instance.id,
       'name': instance.name,
       'emoji': instance.emoji,
-      'item_count': instance.itemCount,
+      'itemCount': instance.itemCount,
     };
 
 MenuItemVariantModel _$MenuItemVariantModelFromJson(
@@ -30,7 +30,7 @@ Map<String, dynamic> _$MenuItemVariantModelToJson(
     <String, dynamic>{
       'id': instance.id,
       'label': instance.label,
-      'price_modifier': instance.priceModifier,
+      'priceModifier': instance.priceModifier,
     };
 
 MenuItemExtraModel _$MenuItemExtraModelFromJson(Map<String, dynamic> json) =>
@@ -60,8 +60,8 @@ MenuItemModel _$MenuItemModelFromJson(Map<String, dynamic> json) =>
       reviewCount: json['reviewCount'] as int? ?? 0,
       prepTimeMinutes: json['prepTimeMinutes'] as int? ?? 15,
       calories: json['calories'] as int? ?? 0,
-      isAvailable: json['available'] as bool? ?? true,
-      isFeatured: json['featured'] as bool? ?? false,
+      available: json['available'] as bool? ?? true,
+      featured: json['featured'] as bool? ?? false,
       tag: json['tag'] as String?,
       variants: (json['variants'] as List<dynamic>?)
           ?.map((e) =>
@@ -81,15 +81,15 @@ Map<String, dynamic> _$MenuItemModelToJson(MenuItemModel instance) =>
       'name': instance.name,
       'description': instance.description,
       'price': instance.price,
-      'category_id': instance.categoryId,
+      'categoryId': instance.categoryId,
       'emoji': instance.emoji,
-      'image_url': instance.imageUrl,
+      'imageUrl': instance.imageUrl,
       'rating': instance.rating,
-      'review_count': instance.reviewCount,
-      'prep_time_minutes': instance.prepTimeMinutes,
+      'reviewCount': instance.reviewCount,
+      'prepTimeMinutes': instance.prepTimeMinutes,
       'calories': instance.calories,
-      'is_available': instance.isAvailable,
-      'is_featured': instance.isFeatured,
+      'available': instance.available,
+      'featured': instance.featured,
       'tag': instance.tag,
       'variants': instance.variants.map((e) => e.toJson()).toList(),
       'extras': instance.extras.map((e) => e.toJson()).toList(),

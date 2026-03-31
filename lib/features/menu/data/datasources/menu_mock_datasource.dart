@@ -69,7 +69,7 @@ class MockMenuRemoteDataSource implements MenuRemoteDataSource {
     await Future.delayed(const Duration(milliseconds: 600));
 
     return MockData.menuItems
-        .where((i) => i.isFeatured && i.isAvailable)
+        .where((i) => i.featured && i.available)
         .take(8) // Cap featured items for the banner carousel
         .toList();
   }
