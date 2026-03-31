@@ -272,7 +272,10 @@ class AppRouter {
         name: 'menu-item-detail',
         pageBuilder: (ctx, state) => _buildSlideTransition(
           state,
-          MenuItemDetailPage(itemId: state.pathParameters['id']!),
+          MenuItemDetailPage(
+            itemId: state.pathParameters['id']!,
+            item: state.extra is MenuItemEntity ? state.extra as MenuItemEntity : null,
+          ),
         ),
       ),
       GoRoute(
