@@ -11,6 +11,7 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../auth/presentation/block/registration_bloc.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../order_tracking/domain/entities/order_entity.dart';
 import '../bloc/checkout_bloc.dart';
@@ -24,6 +25,7 @@ class CheckoutPage extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => getIt<CheckoutBloc>()),
         BlocProvider(create: (_) => getIt<CartBloc>()..add(LoadCartEvent())),
+        BlocProvider(create: (_) => getIt<RegistrationBloc>()..add(FetchLocationEvent())),
       ],
       child: const _CheckoutView(),
     );
@@ -119,33 +121,56 @@ class _CheckoutView extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
           border: Border.all(color: AppColors.navyAccent, width: 0.5),
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 42,
-              height: 42,
-              decoration: BoxDecoration(
-                color: AppColors.goldGlow,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-              ),
-              child: const Icon(Icons.home_rounded, color: AppColors.goldBright, size: 22),
-            ),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Home', style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w700, color: AppColors.textPrimary, fontSize: 14)),
-                  SizedBox(height: 2),
-                  Text('Kariakoo, Dar es Salaam', style: TextStyle(fontFamily: 'Poppins', color: AppColors.textSecondary, fontSize: 13)),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Text('Change', style: AppTextStyles.labelMedium.copyWith(color: AppColors.goldBright)),
-            ),
-          ],
+        child: BlocBuilder<RegistrationBloc, RegistrationState>(
+          builder: (context, state) {
+            return Row(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: AppColors.goldGlow,
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                  ),
+                  child: const Icon(Icons.home_rounded, color: AppColors.goldBright, size: 22),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Home',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                              fontSize: 14)),
+                      const SizedBox(height: 2),
+                      // Reactive Address Text
+                      if (state is LocationFetchedState) ...[
+                        Text(state.location.displayName,
+                            style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                color: AppColors.textSecondary,
+                                fontSize: 13)),
+                      ] else if (state is LocationLoadingState) ...[
+                        const Text('Detecting your location...',
+                            style: TextStyle(fontSize: 13, color: AppColors.textMuted)),
+                      ] else ...[
+                        const Text('Location not set',
+                            style: TextStyle(fontSize: 13, color: AppColors.textMuted)),
+                      ],
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => context.read<RegistrationBloc>().add(FetchLocationEvent()),
+                  child: Text('Change',
+                      style: AppTextStyles.labelMedium.copyWith(color: AppColors.goldBright)),
+                ),
+              ],
+            );
+          },
         ),
       ),
     ],
