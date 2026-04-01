@@ -160,11 +160,13 @@ class _ChakulaChapButtonState extends State<ChakulaChapButton>
           const SizedBox(width: 8),
         ],
         Flexible(
-          child: Text(
-            widget.label,
-            style: AppTextStyles.buttonText.copyWith(color: _labelColor),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              widget.label,
+              style: AppTextStyles.buttonText.copyWith(color: _labelColor),
+              maxLines: 1,
+            ),
           ),
         ),
         if (widget.suffixIcon != null) ...[

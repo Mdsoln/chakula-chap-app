@@ -70,6 +70,16 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
     );
   }
 
+  String _formatPrice(int amount) {
+    if (amount >= 1000) {
+      final k = amount / 1000;
+      return k == k.truncateToDouble()
+          ? '${k.toInt()}K'
+          : '${k.toStringAsFixed(1)}K';
+    }
+    return amount.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_item == null) {
@@ -496,7 +506,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ChakulaChapButton(
-                        label: 'Add to Cart • Tsh ${_total.toInt()}',
+                        label: 'Add to Cart  •  Tsh ${_formatPrice(_total.toInt())}',
                         onPressed: (
                             _item!.available && _qty > 0 &&
                             (_item!.variants.isEmpty || _selectedVariantIndex != null
