@@ -138,7 +138,7 @@ class _SplashIcon extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.goldBright.withOpacity(0.3),
+            color: AppColors.goldBright.withValues(alpha: 0.3),
             blurRadius: 24,
             spreadRadius: 4,
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -51,7 +52,19 @@ class _FeaturedBannerState extends State<FeaturedBanner> {
             controller: _controller,
             onPageChanged: (i) => setState(() => _current = i),
             itemCount: widget.items.length,
-            itemBuilder: (_, i) => _BannerCard(item: widget.items[i]),
+            itemBuilder: (_, i) {
+              final item = widget.items[i];
+              return GestureDetector(
+                onTap: () {
+                  context.pushNamed(
+                    'menu-item-detail',
+                    pathParameters: {'id': item.id},
+                    extra: item,
+                  );
+                },
+                child: _BannerCard(item: item),
+              );
+            },
           ),
         ),
         const SizedBox(height: 10),
@@ -123,7 +136,7 @@ class _BannerCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.goldGlow,
                             borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
-                            border: Border.all(color: AppColors.goldBright.withOpacity(0.4)),
+                            border: Border.all(color: AppColors.goldBright.withValues(alpha: 0.4)),
                           ),
                           child: Text(
                             item.tag!,

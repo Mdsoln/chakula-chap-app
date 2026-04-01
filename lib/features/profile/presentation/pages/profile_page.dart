@@ -119,7 +119,7 @@ class _ProfileView extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.goldBright.withOpacity(0.35),
+                  color: AppColors.goldBright.withValues(alpha: 0.35),
                   blurRadius: 20,
                   offset: const Offset(0, 6),
                 ),
@@ -276,7 +276,7 @@ class _ProfileView extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.errorBg,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
               ),
               child: isLoading
                   ? const Center(

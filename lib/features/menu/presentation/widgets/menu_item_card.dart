@@ -110,7 +110,7 @@ class _MenuItemCardState extends State<MenuItemCard>
         if (!widget.item.available)
           Positioned.fill(
             child: Container(
-              color: Colors.black.withOpacity(0.6),
+              color: Colors.black.withValues(alpha: 0.6),
               child: Center(
                 child: Text(
                   'Unavailable',
@@ -169,7 +169,7 @@ class _MenuItemCardState extends State<MenuItemCard>
                     borderRadius: BorderRadius.circular(9),
                     boxShadow: widget.item.available
                         ? [BoxShadow(
-                      color: AppColors.goldBright.withOpacity(0.4),
+                      color: AppColors.goldBright.withValues(alpha: 0.4),
                       blurRadius: 8,
                       offset: const Offset(0, 3),
                     )]

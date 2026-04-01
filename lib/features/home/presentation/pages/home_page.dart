@@ -241,7 +241,7 @@ class _HomeViewState extends State<_HomeView> {
     ),
   );
 
-  SliverToBoxAdapter _greetingBanner() {
+  /*SliverToBoxAdapter _greetingBanner() {
     final firstName = _user?.name?.split(' ').first ?? 'there';
     final phone = _user?.phone ?? '';
     final email = _user?.email;
@@ -304,7 +304,7 @@ class _HomeViewState extends State<_HomeView> {
         ),
       ),
     );
-  }
+  }*/
 
   SliverToBoxAdapter _searchBar() => SliverToBoxAdapter(
     child: Padding(
@@ -515,14 +515,14 @@ class _HomeViewState extends State<_HomeView> {
               decoration: BoxDecoration(
                 gradient: AppColors.goldGradient,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-                boxShadow: [BoxShadow(color: AppColors.goldBright.withOpacity(0.4), blurRadius: 20, offset: const Offset(0, 6))],
+                boxShadow: [BoxShadow(color: AppColors.goldBright.withValues(alpha: 0.4), blurRadius: 20, offset: const Offset(0, 6))],
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: AppColors.navyDeep.withOpacity(0.25),
+                      color: AppColors.navyDeep.withValues(alpha: 0.25),
                       borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
                     ),
                     child: Text('${cart.itemCount}', style: AppTextStyles.labelLarge.copyWith(color: AppColors.navyDeep)),
@@ -551,7 +551,7 @@ class _HomeViewState extends State<_HomeView> {
       decoration: BoxDecoration(
         color: AppColors.surfaceCard,
         border: const Border(top: BorderSide(color: AppColors.navyAccent, width: 0.5)),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, -4))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, -4))],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

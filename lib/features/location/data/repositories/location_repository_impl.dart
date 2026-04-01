@@ -49,11 +49,17 @@ class LocationRepositoryImpl implements LocationRepository {
 
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
-        final parts = [
-          place.subLocality,
-          place.locality,
-        ].where((p) => p != null && p.isNotEmpty).toList();
-        address = parts.join(', ');
+        final List<String> addressParts = [
+          if (place.street != null && place.street!.isNotEmpty) place.street!,
+          if (place.subLocality != null &&
+              place.subLocality!.isNotEmpty &&
+              place.subLocality != place.street) place.subLocality!,
+        ];
+
+        address = addressParts.isNotEmpty
+            ? addressParts.join(', ')
+            : place.name;
+
         city = place.locality;
         country = place.country;
       }

@@ -136,7 +136,7 @@ class _RegistrationViewState extends State<_RegistrationView> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: AppColors.goldLight.withOpacity(0.15),
+                              color: AppColors.goldLight.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
@@ -185,7 +185,7 @@ class _RegistrationViewState extends State<_RegistrationView> {
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.phone_outlined),
                           filled: true,
-                          fillColor: AppColors.surface.withOpacity(0.4),
+                          fillColor: AppColors.surface.withValues(alpha: 0.4),
                         ),
                       ),
                       const SizedBox(height: 48),

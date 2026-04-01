@@ -113,7 +113,7 @@ class _CartView extends StatelessWidget {
     decoration: BoxDecoration(
       color: AppColors.surfaceCard,
       border: const Border(top: BorderSide(color: AppColors.navyAccent, width: 0.5)),
-      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, -4))],
+      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, -4))],
     ),
     child: Column(
       children: [
@@ -124,7 +124,7 @@ class _CartView extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.successBg,
               borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-              border: Border.all(color: AppColors.success.withOpacity(0.4)),
+              border: Border.all(color: AppColors.success.withValues(alpha: 0.4)),
             ),
             child: Row(
               children: [
