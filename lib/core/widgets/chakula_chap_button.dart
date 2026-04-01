@@ -96,7 +96,7 @@ class _ChakulaChapButtonState extends State<ChakulaChapButton>
           borderRadius: BorderRadius.circular(radius),
           boxShadow: [
             BoxShadow(
-              color: AppColors.goldBright.withOpacity(0.35),
+              color: AppColors.goldBright.withValues(alpha: 0.35),
               blurRadius: 16,
               offset: const Offset(0, 6),
             ),

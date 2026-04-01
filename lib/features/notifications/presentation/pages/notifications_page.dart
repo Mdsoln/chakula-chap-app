@@ -230,7 +230,7 @@ class _NotifCard extends StatelessWidget {
           color: item.isRead ? AppColors.surfaceCard : AppColors.navyLight,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
           border: Border.all(
-            color: item.isRead ? AppColors.navyAccent : AppColors.goldBright.withOpacity(0.3),
+            color: item.isRead ? AppColors.navyAccent : AppColors.goldBright.withValues(alpha: 0.3),
             width: 0.5,
           ),
         ),
@@ -296,7 +296,7 @@ class _NotifCard extends StatelessWidget {
     return Container(
       width: 40, height: 40,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
       ),
       child: Icon(icon, color: color, size: 20),

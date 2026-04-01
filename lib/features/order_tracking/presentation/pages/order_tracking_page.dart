@@ -165,7 +165,7 @@ class _OrderTrackingView extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.successBg,
               borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
-              border: Border.all(color: AppColors.success.withOpacity(0.4)),
+              border: Border.all(color: AppColors.success.withValues(alpha: 0.4)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -233,7 +233,7 @@ class _OrderTrackingView extends StatelessWidget {
                             width: isActive ? 2 : 0.5,
                           ),
                           boxShadow: isActive
-                              ? [BoxShadow(color: AppColors.goldBright.withOpacity(0.4), blurRadius: 12)]
+                              ? [BoxShadow(color: AppColors.goldBright.withValues(alpha: 0.4), blurRadius: 12)]
                               : null,
                         ),
                         child: Center(
@@ -419,9 +419,9 @@ class _RiderActionBtn extends StatelessWidget {
       width: 42,
       height: 42,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-        border: Border.all(color: color.withOpacity(0.4)),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
       child: Icon(icon, color: color, size: 20),
     ),
@@ -433,7 +433,7 @@ class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF00FF00).withOpacity(0.04)
+      ..color = const Color(0xFF00FF00).withValues(alpha: 0.04)
       ..strokeWidth = 1;
     const step = 24.0;
     for (double x = 0; x < size.width; x += step) {

@@ -34,7 +34,7 @@ class CategoryChip extends StatelessWidget {
             width: isSelected ? 0 : 0.5,
           ),
           boxShadow: isSelected
-              ? [BoxShadow(color: AppColors.goldBright.withOpacity(0.35), blurRadius: 12, offset: const Offset(0, 4))]
+              ? [BoxShadow(color: AppColors.goldBright.withValues(alpha: 0.35), blurRadius: 12, offset: const Offset(0, 4))]
               : null,
         ),
         child: Row(

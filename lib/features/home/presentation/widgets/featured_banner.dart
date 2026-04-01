@@ -136,7 +136,7 @@ class _BannerCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.goldGlow,
                             borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
-                            border: Border.all(color: AppColors.goldBright.withOpacity(0.4)),
+                            border: Border.all(color: AppColors.goldBright.withValues(alpha: 0.4)),
                           ),
                           child: Text(
                             item.tag!,

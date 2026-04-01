@@ -342,7 +342,7 @@ class _CheckoutView extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.surfaceCard,
               border: const Border(top: BorderSide(color: AppColors.navyAccent, width: 0.5)),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, -4))],
+              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, -4))],
             ),
             child: isPlacing
                 ? Column(
@@ -397,7 +397,7 @@ class _PaymentMethodTile extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? _accentColor.withOpacity(0.12) : AppColors.surfaceCard,
+          color: isSelected ? _accentColor.withValues(alpha: 0.12) : AppColors.surfaceCard,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
           border: Border.all(
             color: isSelected ? _accentColor : AppColors.navyAccent,

@@ -254,7 +254,7 @@ void showChakulaChapSnackbar(
         backgroundColor: bgColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-          side: BorderSide(color: textColor.withOpacity(0.3)),
+          side: BorderSide(color: textColor.withValues(alpha: 0.3)),
         ),
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.all(AppDimensions.spaceMd),

@@ -78,9 +78,9 @@ class _OrderConfirmPageState extends State<OrderConfirmPage>
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.selcom.withOpacity(0.1),
+                    color: AppColors.selcom.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-                    border: Border.all(color: AppColors.selcom.withOpacity(0.4)),
+                    border: Border.all(color: AppColors.selcom.withValues(alpha: 0.4)),
                   ),
                   child: Column(
                     children: [

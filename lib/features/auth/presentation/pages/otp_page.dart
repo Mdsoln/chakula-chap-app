@@ -250,7 +250,7 @@ class _OtpViewState extends State<_OtpView> with CodeAutoFill {
             border: Border.all(color: AppColors.goldBright, width: 1.5),
             boxShadow: [
               BoxShadow(
-                color: AppColors.goldBright.withOpacity(0.2),
+                color: AppColors.goldBright.withValues(alpha: 0.2),
                 blurRadius: 12,
               ),
             ],
@@ -318,7 +318,7 @@ class _OtpViewState extends State<_OtpView> with CodeAutoFill {
 
   Widget _buildVerifyingOverlay() {
     return Container(
-      color: AppColors.navyDeep.withOpacity(0.85),
+      color: AppColors.navyDeep.withValues(alpha: 0.85),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
