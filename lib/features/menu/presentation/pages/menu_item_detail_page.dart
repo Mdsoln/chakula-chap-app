@@ -32,18 +32,21 @@ class _MenuItemDetailView extends StatefulWidget {
 
 class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
   int _qty = 1;
-  int _selectedVariantIndex = 0;
+  int? _selectedVariantIndex;
   final Set<int> _selectedExtras = {};
 
   MenuItemEntity? get _item => widget.item;
 
   double get _unitPrice {
     if (_item == null) return 0;
-    final variantMod = _item!.variants.isNotEmpty
-        ? _item!.variants[_selectedVariantIndex].priceModifier
+
+    final variantMod = (_item!.variants.isNotEmpty && _selectedVariantIndex != null)
+        ? _item!.variants[_selectedVariantIndex!].priceModifier
         : 0.0;
+
     final extrasTotal = _selectedExtras.fold<double>(
         0, (sum, i) => sum + _item!.extras[i].price);
+
     return _item!.price + variantMod + extrasTotal;
   }
 
@@ -55,7 +58,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
       menuItem: _item!,
       quantity: _qty,
       variant: _item!.variants.isNotEmpty
-          ? _item!.variants[_selectedVariantIndex]
+          ? _item!.variants[_selectedVariantIndex!]
           : null,
       extras: _selectedExtras.map((i) => _item!.extras[i]).toList(),
     ));
@@ -125,7 +128,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
         child: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.navyDeep.withOpacity(0.7),
+            color: AppColors.navyDeep.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppColors.navyAccent, width: 0.5),
           ),
@@ -136,7 +139,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
         Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.navyDeep.withOpacity(0.7),
+            color: AppColors.navyDeep.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppColors.navyAccent, width: 0.5),
           ),
@@ -186,7 +189,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                     decoration: BoxDecoration(
                       color: AppColors.goldGlow,
                       borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
-                      border: Border.all(color: AppColors.goldBright.withOpacity(0.4)),
+                      border: Border.all(color: AppColors.goldBright.withValues(alpha: 0.4)),
                     ),
                     child: Text(_item!.tag!,
                         style: AppTextStyles.caption.copyWith(color: AppColors.goldBright)),
@@ -257,7 +260,27 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Choose Size', style: AppTextStyles.h4),
+        Row(
+          children: [
+            const Text('Choose Size', style: AppTextStyles.h4),
+            const SizedBox(width: 8),
+            if (_selectedVariantIndex == null)
+              Container(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.warningBg,
+                  borderRadius:
+                  BorderRadius.circular(AppDimensions.radiusFull),
+                ),
+                child: Text(
+                  'Required',
+                  style: AppTextStyles.caption
+                      .copyWith(color: AppColors.warning),
+                ),
+              ),
+          ],
+        ),
         const SizedBox(height: 10),
         Row(
           children: List.generate(_item!.variants.length, (i) {
@@ -268,24 +291,35 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                 onTap: () => setState(() => _selectedVariantIndex = i),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  margin: EdgeInsets.only(right: i < _item!.variants.length - 1 ? 8 : 0),
+                  margin: EdgeInsets.only(
+                      right: i < _item!.variants.length - 1 ? 8 : 0),
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
                     color: sel ? AppColors.goldGlow : AppColors.surfaceCard,
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                    borderRadius:
+                    BorderRadius.circular(AppDimensions.radiusMd),
                     border: Border.all(
-                      color: sel ? AppColors.goldBright : AppColors.navyAccent,
+                      color: sel
+                          ? AppColors.goldBright
+                          : AppColors.navyAccent,
                       width: sel ? 1.5 : 0.5,
                     ),
                   ),
                   child: Column(
                     children: [
-                      Text(v.label,
-                          style: AppTextStyles.labelLarge.copyWith(
-                              color: sel ? AppColors.goldBright : AppColors.textSecondary)),
+                      Text(
+                        v.label,
+                        style: AppTextStyles.labelLarge.copyWith(
+                            color: sel
+                                ? AppColors.goldBright
+                                : AppColors.textSecondary),
+                      ),
                       if (v.priceModifier != 0)
-                        Text('+Tsh ${v.priceModifier.toInt()}',
-                            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted)),
+                        Text(
+                          '${v.priceModifier > 0 ? '+' : ''}Tsh ${v.priceModifier.toInt()}',
+                          style: AppTextStyles.bodySmall
+                              .copyWith(color: AppColors.textMuted),
+                        ),
                     ],
                   ),
                 ),
@@ -375,7 +409,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
               border: const Border(top: BorderSide(color: AppColors.navyAccent, width: 0.5)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, -4),
                 )
@@ -395,7 +429,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                         borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.goldBright.withOpacity(0.35),
+                            color: AppColors.goldBright.withValues(alpha: 0.35),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           )
@@ -406,7 +440,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: AppColors.navyDeep.withOpacity(0.25),
+                              color: AppColors.navyDeep.withValues(alpha: 0.25),
                               borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
                             ),
                             child: Text(
@@ -463,7 +497,9 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                     Expanded(
                       child: ChakulaChapButton(
                         label: 'Add to Cart • Tsh ${_total.toInt()}',
-                        onPressed: _item!.available ? _addToCart : null,
+                        onPressed: (_item!.available && (_item!.variants.isEmpty || _selectedVariantIndex != null))
+                            ? _addToCart
+                            : null,
                       ),
                     ),
                   ],
