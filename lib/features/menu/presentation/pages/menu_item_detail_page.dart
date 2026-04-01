@@ -31,7 +31,7 @@ class _MenuItemDetailView extends StatefulWidget {
 }
 
 class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
-  int _qty = 1;
+  int _qty = 0;
   int? _selectedVariantIndex;
   final Set<int> _selectedExtras = {};
 
@@ -53,7 +53,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
   double get _total => _unitPrice * _qty;
 
   void _addToCart() {
-    if (_item == null) return;
+    if (_item == null || _qty <= 0) return;
     context.read<CartBloc>().add(AddToCartEvent(
       menuItem: _item!,
       quantity: _qty,
@@ -478,7 +478,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                       child: Row(
                         children: [
                           IconButton(
-                            onPressed: () => setState(() => _qty = (_qty - 1).clamp(1, 99)),
+                            onPressed: () => setState(() => _qty = (_qty - 1).clamp(0, 99)),
                             icon: const Icon(Icons.remove_rounded, size: 18, color: AppColors.textSecondary),
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
@@ -497,9 +497,13 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                     Expanded(
                       child: ChakulaChapButton(
                         label: 'Add to Cart • Tsh ${_total.toInt()}',
-                        onPressed: (_item!.available && (_item!.variants.isEmpty || _selectedVariantIndex != null))
-                            ? _addToCart
-                            : null,
+                        onPressed: (
+                            _item!.available && _qty > 0 &&
+                            (_item!.variants.isEmpty || _selectedVariantIndex != null
+                            )
+                        )
+                        ? _addToCart
+                        : null,
                       ),
                     ),
                   ],
