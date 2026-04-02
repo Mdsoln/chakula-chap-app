@@ -141,7 +141,12 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     on<PlaceOrderEvent>(_onPlaceOrder);
 
     // Pre-load with default address
-    emit(const CheckoutReadyState(address: _defaultAddress));
+    emit(const CheckoutReadyState(
+        address: _defaultAddress,// here it was decoded with the address
+      // can we take the from the checkout page ??
+      selectedMethod: PaymentMethod.cashOnDelivery,
+      canPlaceOrder: true,
+    ));
   }
 
   void _onSelectMethod(

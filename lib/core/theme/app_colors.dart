@@ -39,7 +39,7 @@ abstract class AppColors {
 
   // ── Payment Brand Colors ──────────────────────────────────
   static const Color mpesa        = Color(0xFF4CAF50);
-  static const Color tigoPesa     = Color(0xFF00BCD4);
+  static const Color MixYas     = Color(0xFF00BCD4);
   static const Color airtelMoney  = Color(0xFFF44336);
   static const Color azamPesa     = Color(0xFF2196F3);
   static const Color selcom       = Color(0xFFFF9800);
