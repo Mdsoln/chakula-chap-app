@@ -66,13 +66,13 @@ class _CheckoutView extends StatelessWidget {
                       const SizedBox(height: 16),
                       _buildDeliveryAddress(),
                       const SizedBox(height: 24),
-                      _buildPaymentMethods(),
-                      const SizedBox(height: 24),
-                      _buildPaymentPhoneInput(),
+                      _buildOrderSummary(),
                       const SizedBox(height: 24),
                       _buildOrderNotes(),
                       const SizedBox(height: 24),
-                      _buildOrderSummary(),
+                      _buildPaymentMethods(),
+                      const SizedBox(height: 24),
+                      _buildPaymentPhoneInput(),
                       const SizedBox(height: 24),
                     ],
                   ),
@@ -146,7 +146,6 @@ class _CheckoutView extends StatelessWidget {
                               color: AppColors.textPrimary,
                               fontSize: 14)),
                       const SizedBox(height: 2),
-                      // Reactive Address Text
                       if (state is LocationFetchedState) ...[
                         Text(state.location.displayName,
                             style: const TextStyle(
@@ -406,7 +405,7 @@ class _PaymentMethodTile extends StatelessWidget {
   Color get _accentColor {
     return switch (method) {
       PaymentMethod.mpesa => AppColors.mpesa,
-      PaymentMethod.tigoPesa => AppColors.tigoPesa,
+      PaymentMethod.MixYas => AppColors.tigoPesa,
       PaymentMethod.airtelMoney => AppColors.airtelMoney,
       PaymentMethod.azamPesa => AppColors.azamPesa,
       PaymentMethod.selcom => AppColors.selcom,
