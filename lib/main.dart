@@ -11,6 +11,7 @@ import 'core/observer/app_bloc_observer.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/cart/presentation/bloc/cart_bloc.dart';
+import 'features/favourites/presentation/bloc/favourite_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -69,6 +70,9 @@ class ChakulaChapApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => getIt<CartBloc>()..add(LoadCartEvent()),
+        ),
+        BlocProvider(
+          create: (_) => getIt<FavouriteBloc>(),
         ),
       ],
       child: MaterialApp.router(

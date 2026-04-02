@@ -33,6 +33,12 @@ import '../../features/cart/domain/repositories/cart_repository.dart';
 import '../../features/cart/domain/usecases/cart_usecases.dart';
 import '../../features/cart/presentation/bloc/cart_bloc.dart';
 import '../../features/checkout/presentation/bloc/checkout_bloc.dart';
+import '../../features/favourites/data/datasources/favourite_remote_datasource.dart';
+import '../../features/favourites/data/repositories/favourite_repository_impl.dart';
+import '../../features/favourites/domain/repositories/favourite_repository.dart';
+import '../../features/favourites/domain/usecases/get_favourites_usecase.dart';
+import '../../features/favourites/domain/usecases/toggle_favourite_usecase.dart';
+import '../../features/favourites/presentation/bloc/favourite_bloc.dart';
 import '../../features/location/data/repositories/location_repository_impl.dart';
 import '../../features/location/domain/repositories/location_repository.dart';
 import '../../features/location/domain/usecases/get_current_location_usecase.dart';
@@ -172,6 +178,26 @@ extension GetItInjectableX on _i174.GetIt {
         gh<GetCategoriesUseCase>(),
         gh<GetMenuItemsUseCase>(),
         gh<GetFeaturedItemsUseCase>(),
+      ),
+    );
+
+    // ── Favourites ────────────────────────────────────────────────────────────────
+    gh.factory<FavouriteRemoteDataSource>(
+          () => FavouriteRemoteDataSourceImpl(gh<NetworkClient>()),
+    );
+    gh.factory<FavouriteRepository>(
+          () => FavouriteRepositoryImpl(gh<FavouriteRemoteDataSource>()),
+    );
+    gh.factory<ToggleFavouriteUseCase>(
+          () => ToggleFavouriteUseCase(gh<FavouriteRepository>()),
+    );
+    gh.factory<GetFavouritesUseCase>(
+          () => GetFavouritesUseCase(gh<FavouriteRepository>()),
+    );
+    gh.factory<FavouriteBloc>(
+          () => FavouriteBloc(
+        gh<ToggleFavouriteUseCase>(),
+        gh<GetFavouritesUseCase>(),
       ),
     );
 
