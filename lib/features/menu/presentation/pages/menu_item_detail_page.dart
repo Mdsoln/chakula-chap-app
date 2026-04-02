@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:chakula_chap/core/widgets/chakula_chap_button.dart';
 import 'package:chakula_chap/core/widgets/chakula_chap_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,6 +11,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
+import '../../../favourites/presentation/bloc/favourite_bloc.dart';
 import '../../../menu/domain/entities/menu_item_entity.dart';
 
 class MenuItemDetailPage extends StatelessWidget {
@@ -68,6 +70,16 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
       message: '${_item!.emoji} ${_item!.name} added to cart!',
       isSuccess: true,
     );
+  }
+
+  String _formatPrice(int amount) {
+    if (amount >= 1000) {
+      final k = amount / 1000;
+      return k == k.truncateToDouble()
+          ? '${k.toInt()}K'
+          : '${k.toStringAsFixed(1)}K';
+    }
+    return amount.toString();
   }
 
   @override
@@ -136,17 +148,36 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
         ),
       ),
       actions: [
-        Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.navyDeep.withValues(alpha: 0.7),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.navyAccent, width: 0.5),
-          ),
-          child: IconButton(
-            icon: const Icon(Icons.favorite_border_rounded, color: AppColors.textPrimary, size: 20),
-            onPressed: () {},
-          ),
+        BlocBuilder<FavouriteBloc, FavouriteState>(
+          builder: (context, state) {
+            final isFav = state.isFavourited(_item!.id);
+            return Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.navyDeep.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.navyAccent, width: 0.5),
+              ),
+              child: IconButton(
+                icon: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  transitionBuilder: (child, anim) =>
+                      ScaleTransition(scale: anim, child: child),
+                  child: Icon(
+                    isFav
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    key: ValueKey(isFav),
+                    color: isFav ? AppColors.error : AppColors.textPrimary,
+                    size: 20,
+                  ),
+                ),
+                onPressed: () => context
+                    .read<FavouriteBloc>()
+                    .add(ToggleFavouriteEvent(_item!.id)),
+              ),
+            );
+          },
         ),
       ],
       flexibleSpace: FlexibleSpaceBar(
@@ -496,7 +527,7 @@ class _MenuItemDetailViewState extends State<_MenuItemDetailView> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ChakulaChapButton(
-                        label: 'Add to Cart • Tsh ${_total.toInt()}',
+                        label: 'Add to Cart  •  Tsh ${_formatPrice(_total.toInt())}',
                         onPressed: (
                             _item!.available && _qty > 0 &&
                             (_item!.variants.isEmpty || _selectedVariantIndex != null

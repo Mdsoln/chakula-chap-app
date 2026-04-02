@@ -85,6 +85,8 @@ abstract class ApiEndpoints {
   static const String categories  = '/menu/categories/active';
   static const String menuItems   = '/menu/items';
   static const String featuredItems = '/menu/featured';
+  static String toggleFavourite(String id) => '/menu/items/$id/favourite';
+  static const String myFavourites = '/menu/favourites';
   static String menuItemById(String id) => '/menu/items/$id';
 
   // Orders

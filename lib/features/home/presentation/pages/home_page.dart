@@ -13,6 +13,7 @@ import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../auth/presentation/block/registration_bloc.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
+import '../../../favourites/presentation/bloc/favourite_bloc.dart';
 import '../../../menu/domain/entities/menu_item_entity.dart';
 import '../../../menu/presentation/bloc/menu_bloc.dart';
 import '../../../menu/presentation/widgets/menu_item_card.dart';
@@ -61,6 +62,7 @@ class _HomeViewState extends State<_HomeView> {
     if (_user == null) {
       _loadUser();
     }
+    context.read<FavouriteBloc>().add(LoadFavouritesEvent());
   }
 
   Future<void> _loadUser() async {
