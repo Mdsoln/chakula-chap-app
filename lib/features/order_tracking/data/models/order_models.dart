@@ -261,7 +261,7 @@ class OrderModel {
   static PaymentMethod _parsePaymentMethod(String raw) {
     const map = {
       'MPESA': PaymentMethod.mpesa,
-      'MIX_BY_YAS': PaymentMethod.MixYas,
+      'MIX_BY_YAS': PaymentMethod.mixxYas,
       'AIRTEL_MONEY': PaymentMethod.airtelMoney,
       'AZAM_PESA': PaymentMethod.azamPesa,
       'SELCOM': PaymentMethod.selcom,

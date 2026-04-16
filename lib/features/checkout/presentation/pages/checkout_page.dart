@@ -959,7 +959,7 @@ class _PaymentMethodTile extends StatelessWidget {
 
   Color get _accentColor => switch (method) {
     PaymentMethod.mpesa => AppColors.mpesa,
-    PaymentMethod.MixYas => AppColors.MixYas,
+    PaymentMethod.mixxYas => AppColors.MixYas,
     PaymentMethod.airtelMoney => AppColors.airtelMoney,
     PaymentMethod.azamPesa => AppColors.azamPesa,
     PaymentMethod.selcom => AppColors.selcom,
