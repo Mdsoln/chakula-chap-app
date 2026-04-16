@@ -52,6 +52,7 @@ import '../../features/order_tracking/data/datasources/order_tracking_datasource
 import '../../features/order_tracking/data/repositories/order_repository_impl.dart';
 import '../../features/order_tracking/domain/repositories/order_repository.dart';
 import '../../features/order_tracking/domain/usecases/order_usecases.dart';
+import '../../features/order_tracking/presentation/bloc/order_history_bloc.dart';
 import '../../features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 import '../network/auth_interceptor.dart';
 import '../network/connectivity_checker.dart';
@@ -267,6 +268,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<WatchOrderTrackingUseCase>(),
         gh<GetOrderByIdUseCase>(),
       ),
+    );
+    gh.factory<OrderHistoryBloc>(
+          () => OrderHistoryBloc(gh<GetMyOrdersUseCase>()),
     );
 
     return this;

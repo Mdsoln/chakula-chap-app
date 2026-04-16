@@ -891,7 +891,7 @@ class _PlaceOrderBar extends StatelessWidget {
                   ],
                   ChakulaChapButton(
                     label: canPlace
-                        ? '🔥 Place Order · Tsh ${cart?.total.toInt() ?? 0}'
+                        ? 'Place Order · Tsh ${cart?.total.toInt() ?? 0}'
                         : 'Select Payment Method',
                     onPressed: canPlace && cart != null
                         ? () => context
