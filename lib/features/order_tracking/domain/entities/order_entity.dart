@@ -5,7 +5,7 @@ import '../../../cart/domain/entities/cart_entity.dart';
 
 enum PaymentMethod {
   mpesa,
-  tigoPesa,
+  mixxYas,
   airtelMoney,
   azamPesa,
   selcom,
@@ -16,7 +16,7 @@ extension PaymentMethodX on PaymentMethod {
   String get label {
     switch (this) {
       case PaymentMethod.mpesa: return 'M-Pesa';
-      case PaymentMethod.tigoPesa: return 'Tigo Pesa';
+      case PaymentMethod.mixxYas: return 'Mix by Yas';
       case PaymentMethod.airtelMoney: return 'Airtel Money';
       case PaymentMethod.azamPesa: return 'AzamPesa';
       case PaymentMethod.selcom: return 'Selcom';
@@ -27,7 +27,7 @@ extension PaymentMethodX on PaymentMethod {
   String get emoji {
     switch (this) {
       case PaymentMethod.mpesa: return '📱';
-      case PaymentMethod.tigoPesa: return '💚';
+      case PaymentMethod.mixxYas: return '💚';
       case PaymentMethod.airtelMoney: return '❤️';
       case PaymentMethod.azamPesa: return '🔵';
       case PaymentMethod.selcom: return '🧾';
@@ -38,11 +38,23 @@ extension PaymentMethodX on PaymentMethod {
   String get subtitle {
     switch (this) {
       case PaymentMethod.mpesa: return 'Vodacom · STK Push';
-      case PaymentMethod.tigoPesa: return 'MIC Tanzania · STK Push';
+      case PaymentMethod.mixxYas: return 'Mix by Yas · STK Push';
       case PaymentMethod.airtelMoney: return 'Airtel · STK Push';
       case PaymentMethod.azamPesa: return 'Azam · STK Push';
       case PaymentMethod.selcom: return 'Control Number / Bill Pay';
       case PaymentMethod.cashOnDelivery: return 'Pay when delivered';
+    }
+  }
+
+  String get iconPath {
+    const basePath = 'assets/images/payments';
+    switch (this) {
+      case PaymentMethod.mpesa: return '$basePath/mpesa.png';
+      case PaymentMethod.mixxYas: return '$basePath/yas.png';
+      case PaymentMethod.airtelMoney: return '$basePath/airtelmoney.png';
+      case PaymentMethod.azamPesa: return '$basePath/azampesa.png';
+      case PaymentMethod.selcom: return '$basePath/selcom.png';
+      case PaymentMethod.cashOnDelivery: return '$basePath/cod.png';
     }
   }
 

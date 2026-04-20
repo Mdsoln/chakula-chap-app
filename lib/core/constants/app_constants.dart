@@ -90,7 +90,7 @@ abstract class ApiEndpoints {
   static String menuItemById(String id) => '/menu/items/$id';
 
   // Orders
-  static const String placeOrder  = '/orders';
+  static const String placeOrder  = '/orders/place';
   static const String myOrders    = '/orders/me';
   static String orderById(String id) => '/orders/$id';
   static String orderTracking(String id) => '/orders/$id/tracking';

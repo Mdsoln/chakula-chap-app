@@ -1,5 +1,25 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'order_models.dart';
+
+// ── OrderItemExtraModel ────────────────────────────────────────────────────────
+
+OrderItemExtraModel _$OrderItemExtraModelFromJson(Map<String, dynamic> json) =>
+    OrderItemExtraModel(
+      extraId: json['extraId'] as String,
+      extraName: json['extraName'] as String,
+      price: (json['price'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$OrderItemExtraModelToJson(
+    OrderItemExtraModel instance) =>
+    <String, dynamic>{
+      'extraId': instance.extraId,
+      'extraName': instance.extraName,
+      'price': instance.price,
+    };
+
+// ── RiderModel ────────────────────────────────────────────────────────────────
 
 RiderModel _$RiderModelFromJson(Map<String, dynamic> json) => RiderModel(
   id: json['id'] as String,
@@ -19,6 +39,8 @@ Map<String, dynamic> _$RiderModelToJson(RiderModel instance) =>
       'total_deliveries': instance.totalDeliveries,
       'avatar_url': instance.avatarUrl,
     };
+
+// ── DeliveryAddressModel ──────────────────────────────────────────────────────
 
 DeliveryAddressModel _$DeliveryAddressModelFromJson(
     Map<String, dynamic> json) =>
@@ -44,47 +66,61 @@ Map<String, dynamic> _$DeliveryAddressModelToJson(
       'instructions': instance.instructions,
     };
 
+// ── OrderItemModel ────────────────────────────────────────────────────────────
+
 OrderItemModel _$OrderItemModelFromJson(Map<String, dynamic> json) =>
     OrderItemModel(
-      menuItemId: json['menu_item_id'] as String,
-      menuItemName: json['menu_item_name'] as String,
-      menuItemEmoji: json['menu_item_emoji'] as String,
-      unitPrice: (json['unit_price'] as num).toDouble(),
+      menuItemId: json['menuItemId'] as String,
+      menuItemName: json['menuItemName'] as String,
+      menuItemEmoji: json['menuItemEmoji'] as String,
+      unitPrice: (json['unitPrice'] as num).toDouble(),
       quantity: json['quantity'] as int,
-      lineTotal: (json['line_total'] as num).toDouble(),
+      lineTotal: (json['lineTotal'] as num).toDouble(),
+      variantLabel: json['variantLabel'] as String?,
+      note: json['note'] as String?,
+      extras: (json['extras'] as List<dynamic>?)
+          ?.map((e) =>
+          OrderItemExtraModel.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$OrderItemModelToJson(OrderItemModel instance) =>
     <String, dynamic>{
-      'menu_item_id': instance.menuItemId,
-      'menu_item_name': instance.menuItemName,
-      'menu_item_emoji': instance.menuItemEmoji,
-      'unit_price': instance.unitPrice,
+      'menuItemId': instance.menuItemId,
+      'menuItemName': instance.menuItemName,
+      'menuItemEmoji': instance.menuItemEmoji,
+      'unitPrice': instance.unitPrice,
       'quantity': instance.quantity,
-      'line_total': instance.lineTotal,
+      'lineTotal': instance.lineTotal,
+      'variantLabel': instance.variantLabel,
+      'note': instance.note,
+      'extras': instance.extras.map((e) => e.toJson()).toList(),
     };
+
+// ── OrderModel ────────────────────────────────────────────────────────────────
 
 OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
   id: json['id'] as String,
-  orderNumber: json['order_number'] as String,
+  orderNumber: json['orderNumber'] as String,
   items: (json['items'] as List<dynamic>)
       .map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
       .toList(),
   deliveryAddress: DeliveryAddressModel.fromJson(
-      json['delivery_address'] as Map<String, dynamic>),
-  paymentMethod: json['payment_method'] as String,
+      json['deliveryAddress'] as Map<String, dynamic>),
+  paymentMethod: json['paymentMethod'] as String,
   status: json['status'] as String,
   subtotal: (json['subtotal'] as num).toDouble(),
-  deliveryFee: (json['delivery_fee'] as num).toDouble(),
+  deliveryFee: (json['deliveryFee'] as num).toDouble(),
   discount: (json['discount'] as num?)?.toDouble() ?? 0.0,
   total: (json['total'] as num).toDouble(),
-  paymentReference: json['payment_reference'] as String?,
-  controlNumber: json['control_number'] as String?,
+  paymentReference: json['paymentReference'] as String?,
+  controlNumber: json['controlNumber'] as String?,
   notes: json['notes'] as String?,
-  placedAt: DateTime.parse(json['placed_at'] as String),
-  estimatedDeliveryAt: json['estimated_delivery_at'] == null
+  placedAt: DateTime.parse(json['placedAt'] as String),
+  estimatedDeliveryAt: json['estimatedDeliveryAt'] == null
       ? null
-      : DateTime.parse(json['estimated_delivery_at'] as String),
+      : DateTime.parse(json['estimatedDeliveryAt'] as String),
   rider: json['rider'] == null
       ? null
       : RiderModel.fromJson(json['rider'] as Map<String, dynamic>),
@@ -93,19 +129,19 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
 Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'order_number': instance.orderNumber,
+      'orderNumber': instance.orderNumber,
       'items': instance.items.map((e) => e.toJson()).toList(),
-      'delivery_address': instance.deliveryAddress.toJson(),
-      'payment_method': instance.paymentMethod,
+      'deliveryAddress': instance.deliveryAddress.toJson(),
+      'paymentMethod': instance.paymentMethod,
       'status': instance.status,
       'subtotal': instance.subtotal,
-      'delivery_fee': instance.deliveryFee,
+      'deliveryFee': instance.deliveryFee,
       'discount': instance.discount,
       'total': instance.total,
-      'payment_reference': instance.paymentReference,
-      'control_number': instance.controlNumber,
+      'paymentReference': instance.paymentReference,
+      'controlNumber': instance.controlNumber,
       'notes': instance.notes,
-      'placed_at': instance.placedAt.toIso8601String(),
-      'estimated_delivery_at': instance.estimatedDeliveryAt?.toIso8601String(),
+      'placedAt': instance.placedAt.toIso8601String(),
+      'estimatedDeliveryAt': instance.estimatedDeliveryAt?.toIso8601String(),
       'rider': instance.rider?.toJson(),
     };

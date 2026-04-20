@@ -1,5 +1,6 @@
 
 import 'package:chakula_chap/features/order_tracking/data/datasources/mock_order_datasource.dart';
+import 'package:chakula_chap/features/order_tracking/presentation/bloc/order_history_bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -21,6 +22,8 @@ import '../../features/menu/data/datasources/menu_remote_datasource.dart';
 import '../../features/order_tracking/data/datasources/order_remote_datasource.dart';
 import '../../features/order_tracking/data/datasources/order_tracking_datasource.dart';
 
+import '../../features/order_tracking/domain/repositories/order_repository.dart';
+import '../../features/order_tracking/domain/usecases/order_usecases.dart';
 import 'injection.config.dart';
 
 final getIt = GetIt.instance;
@@ -89,6 +92,16 @@ void _registerMocks() {
   getIt.registerLazySingleton<OrderTrackingDataSource>(
         () => MockOrderTrackingDataSource.instance,
   );
+
+  getIt.registerFactory<OrderHistoryBloc>(
+        () => OrderHistoryBloc(getIt<GetMyOrdersUseCase>()),
+  );
+
+  getIt.unregister<GetMyOrdersUseCase>();
+  getIt.registerFactory<GetMyOrdersUseCase>(
+        () => GetMyOrdersUseCase(getIt<OrderRepository>()),
+  );
+
 }
 
 /// External (third-party) dependencies registered manually.
